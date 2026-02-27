@@ -1,9 +1,9 @@
+@import './ui/theme.css';
+@import './ui/anatomy/anatomy.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './ui/theme.css';
-@import './ui/anatomy/anatomy.css';
 
 @layer base {
   body {
