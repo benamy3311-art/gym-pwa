@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './ui/theme.css';
+@import './ui/anatomy/anatomy.css';
+
 @layer base {
   body {
     -webkit-tap-highlight-color: transparent;

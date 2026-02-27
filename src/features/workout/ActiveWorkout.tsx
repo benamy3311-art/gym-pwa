@@ -9,6 +9,7 @@ import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
 import { Plus, Trash2, Check, Clock, Search, Undo2, Timer } from 'lucide-react';
 import { RestTimerOverlay } from './RestTimerOverlay';
+import { BodyPartIcon } from '../../ui/anatomy/BodyPartIcon';
 
 export default function ActiveWorkout() {
     const navigate = useNavigate();
@@ -95,7 +96,12 @@ export default function ActiveWorkout() {
                     return (
                         <GlassCard key={entry.id} variant="elevated" className="flex flex-col gap-4 p-4 md:p-6 mb-2">
                             <div className="flex justify-between items-center border-b border-glass-border/30 pb-3">
-                                <h3 className="font-bold text-lg text-primary tracking-tight">{ex?.name || 'Unknown Exercise'}</h3>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center border border-white/5">
+                                        <BodyPartIcon bodyPart={ex?.bodyPart} variant="front" size="sm" />
+                                    </div>
+                                    <h3 className="font-bold text-lg text-primary tracking-tight">{ex?.name || 'Unknown Exercise'}</h3>
+                                </div>
                                 <button
                                     onClick={() => confirm('Remove exercise?') && removeExercise(entry.id)}
                                     className="text-tertiary hover:text-red-400 hover:bg-black/20 p-2 rounded-full transition-all tap-highlight"

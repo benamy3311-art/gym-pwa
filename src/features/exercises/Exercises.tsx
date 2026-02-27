@@ -6,7 +6,7 @@ import { compressImage } from '../../utils/imageCompressor';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
-import { ExerciseImage } from '../../ui/ExerciseImage';
+import { BodyPartIcon } from '../../ui/anatomy/BodyPartIcon';
 import { Search, Plus, Dumbbell, ImagePlus } from 'lucide-react';
 
 export default function Exercises() {
@@ -98,8 +98,8 @@ export default function Exercises() {
 
                 {filtered.map(ex => (
                     <GlassCard key={ex.id} variant="elevated" className="flex items-center gap-4 py-3 px-4 group tap-highlight hover:bg-white/10 transition-colors cursor-pointer">
-                        <div className="relative shrink-0">
-                            <ExerciseImage exercise={ex} className="w-[52px] h-[52px] rounded-xl shadow-sm" />
+                        <div className="relative shrink-0 flex items-center justify-center bg-black/5 rounded-xl border border-glass-border/30 w-[52px] h-[52px]">
+                            <BodyPartIcon bodyPart={ex.bodyPart} variant="front" size="sm" className="opacity-90" />
                             <button
                                 onClick={(e) => { e.stopPropagation(); uploadClick(ex); }}
                                 className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_4px_10px_rgba(10,132,255,0.4)] text-[#ffffff] tap-highlight"
