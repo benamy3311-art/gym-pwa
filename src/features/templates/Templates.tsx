@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTemplates } from './useTemplates';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
-import { Plus, Trash2, LayoutList } from 'lucide-react';
+import { Plus, Trash2, LayoutList, Download } from 'lucide-react';
+import { importFourDayRoutine } from './importFourDayRoutine';
 
 export default function Templates() {
     const navigate = useNavigate();
     const { templates, loadTemplates, addTemplate, deleteTemplate } = useTemplates();
+    const [isImporting, setIsImporting] = useState(false);
 
     useEffect(() => {
         loadTemplates();
@@ -28,15 +30,41 @@ export default function Templates() {
         }
     };
 
+    const handleImportSplit = async () => {
+        setIsImporting(true);
+        try {
+            const result = await importFourDayRoutine();
+            alert(`Success! Created: ${result.created}, Updated: ${result.updated}`);
+            await loadTemplates();
+        } catch (error) {
+            alert('Error importing routine.');
+            console.error(error);
+        } finally {
+            setIsImporting(false);
+        }
+    };
+
     return (
         <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
-            <header className="flex items-end justify-between mb-2 mt-4 px-1">
-                <div>
-                    <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-1">Routines</h1>
-                    <p className="text-secondary font-medium">Manage your custom workouts</p>
+            <header className="flex flex-col gap-3 mb-2 mt-4 px-1">
+                <div className="flex items-end justify-between">
+                    <div>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-1">Routines</h1>
+                        <p className="text-secondary font-medium">Manage your custom workouts</p>
+                    </div>
+                    <GlassButton variant="primary" size="sm" onClick={handleCreate} className="rounded-full w-10 h-10 p-0 mb-1">
+                        <Plus size={20} />
+                    </GlassButton>
                 </div>
-                <GlassButton variant="primary" size="sm" onClick={handleCreate} className="rounded-full w-10 h-10 p-0 mb-1">
-                    <Plus size={20} />
+
+                <GlassButton
+                    variant="secondary"
+                    onClick={handleImportSplit}
+                    disabled={isImporting}
+                    className="w-full justify-center gap-2 mt-2 h-[48px] rounded-2xl flex items-center border-accent/20"
+                >
+                    <Download size={18} className="text-accent" />
+                    <span className="font-semibold text-[15px]">{isImporting ? 'Importing...' : 'Import My 4-Day Split'}</span>
                 </GlassButton>
             </header>
 
