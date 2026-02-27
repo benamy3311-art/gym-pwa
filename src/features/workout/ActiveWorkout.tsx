@@ -111,16 +111,16 @@ export default function ActiveWorkout() {
                             </div>
 
                             {/* Headings */}
-                            <div className="grid grid-cols-[24px_1.1fr_1fr_1fr_38px] md:grid-cols-[40px_1fr_1fr_1fr_50px] gap-2 ios-caption font-semibold text-secondary uppercase tracking-wider px-1">
-                                <div className="text-center opacity-80">Set</div>
-                                <div className="text-center opacity-60">Prev</div>
+                            <div className="grid grid-cols-[40px_70px_1fr_1fr_40px] gap-3 ios-caption font-bold text-secondary uppercase tracking-tighter px-1">
+                                <div className="text-center opacity-70">Set</div>
+                                <div className="text-center opacity-50">Prev</div>
                                 <div className="text-center opacity-80">{activeSession.unit}</div>
                                 <div className="text-center opacity-80">Reps</div>
                                 <div className="text-center opacity-80">✓</div>
                             </div>
 
                             {/* Sets */}
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-3">
                                 {sets.map((set, index) => {
                                     const prevSet = previousSetsByExercise[entry.exerciseId]?.[index];
                                     const prevStr = prevSet ? `${prevSet.weight}x${prevSet.reps}` : '-';
@@ -128,13 +128,13 @@ export default function ActiveWorkout() {
                                     return (
                                         <div
                                             key={set.id}
-                                            className={`grid grid-cols-[24px_1.1fr_1fr_1fr_38px] md:grid-cols-[40px_1fr_1fr_1fr_50px] gap-2 items-center transition-all duration-300 ${set.isDone ? 'opacity-60 grayscale-[50%]' : ''}`}
+                                            className={`grid grid-cols-[40px_70px_1fr_1fr_40px] gap-3 items-center transition-all duration-300 ${set.isDone ? 'opacity-50 grayscale-[40%]' : ''}`}
                                         >
-                                            <div className="text-center font-mono text-tertiary text-[11px] md:text-[13px] font-bold">
+                                            <div className="text-center font-mono text-tertiary text-xs font-bold tabular-nums">
                                                 {index + 1}
                                             </div>
 
-                                            <div className="text-center font-mono text-secondary text-[10px] md:text-xs flex items-center justify-center bg-black/10 rounded-full h-11 md:h-12 shadow-inner-dark border border-white/5 px-0.5 overflow-hidden whitespace-nowrap">
+                                            <div className="text-center font-mono text-secondary text-[11px] flex items-center justify-center bg-black/10 rounded-full h-11 shadow-inner-dark border border-white/5 px-1 overflow-hidden whitespace-nowrap tabular-nums">
                                                 {prevStr}
                                             </div>
 
@@ -143,8 +143,8 @@ export default function ActiveWorkout() {
                                                 inputMode="decimal"
                                                 value={set.weight || ''}
                                                 onChange={e => updateSet(set.id, entry.id, { weight: parseFloat(e.target.value) || 0 })}
-                                                placeholder="-"
-                                                className="h-11 md:h-12 text-center font-bold text-base px-1 bg-black/20 rounded-2xl"
+                                                placeholder="0"
+                                                className="h-11 text-center font-bold text-base px-2 bg-black/20 rounded-2xl tabular-nums focus:bg-black/40 transition-colors"
                                                 disabled={set.isDone}
                                             />
 
@@ -153,8 +153,8 @@ export default function ActiveWorkout() {
                                                 inputMode="numeric"
                                                 value={set.reps || ''}
                                                 onChange={e => updateSet(set.id, entry.id, { reps: parseInt(e.target.value) || 0 })}
-                                                placeholder="-"
-                                                className="h-11 md:h-12 text-center font-bold text-base px-1 bg-black/20 rounded-2xl"
+                                                placeholder="0"
+                                                className="h-11 text-center font-bold text-base px-2 bg-black/20 rounded-2xl tabular-nums focus:bg-black/40 transition-colors"
                                                 disabled={set.isDone}
                                             />
 
@@ -173,12 +173,12 @@ export default function ActiveWorkout() {
                                                         });
                                                     }
                                                 }}
-                                                className={`h-11 md:h-12 rounded-2xl flex items-center justify-center transition-all tap-highlight ${set.isDone
-                                                    ? 'bg-green-500/20 text-green-400 border border-green-500/40 shadow-[0_0_20px_rgba(34,197,94,0.25)]'
+                                                className={`h-11 w-full rounded-2xl flex items-center justify-center transition-all tap-highlight ${set.isDone
+                                                    ? 'bg-green-500/20 text-green-400 border border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.2)]'
                                                     : 'bg-glass-inset text-tertiary hover:bg-black/30 hover:text-secondary border border-glass-border/30 shadow-inner-dark'
                                                     }`}
                                             >
-                                                <Check size={20} strokeWidth={set.isDone ? 3.5 : 2} />
+                                                <Check size={20} strokeWidth={set.isDone ? 3.5 : 2.5} />
                                             </button>
                                         </div>
                                     );
