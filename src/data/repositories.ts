@@ -31,15 +31,41 @@ export const TemplateRepo = {
         return await db.templates.get(id);
     },
     async add(name: string, exerciseIds: string[]) {
-        const template: Template = { id: generateId(), name, exerciseIds };
+        const now = Date.now();
+        const template: Template = {
+            id: generateId(),
+            name,
+            exerciseIds,
+            createdAt: now,
+            updatedAt: now
+        };
         await db.templates.add(template);
         return template;
     },
     async update(id: string, updates: Partial<Template>) {
+        updates.updatedAt = Date.now();
         await db.templates.update(id, updates);
     },
     async delete(id: string) {
         await db.templates.delete(id);
+    },
+    async addExercise(templateId: string, exerciseId: string) {
+        const t = await this.get(templateId);
+        if (!t) throw new Error("Template not found");
+        // Pure function approach for immutable array
+        if (!t.exerciseIds.includes(exerciseId)) {
+            const newExerciseIds = [...t.exerciseIds, exerciseId];
+            await this.update(templateId, { exerciseIds: newExerciseIds });
+            return newExerciseIds;
+        }
+        return t.exerciseIds;
+    },
+    async removeExercise(templateId: string, exerciseId: string) {
+        const t = await this.get(templateId);
+        if (!t) throw new Error("Template not found");
+        const newExerciseIds = t.exerciseIds.filter(id => id !== exerciseId);
+        await this.update(templateId, { exerciseIds: newExerciseIds });
+        return newExerciseIds;
     }
 };
 

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './features/start/Home';
 import Templates from './features/templates/Templates';
+import { TemplateEdit } from './features/templates/TemplateEdit';
 import ActiveWorkout from './features/workout/ActiveWorkout';
 import History from './features/history/History';
 import Exercises from './features/exercises/Exercises';
@@ -37,6 +38,7 @@ function App() {
                     <Route index element={<Home />} />
                     <Route path="workout" element={<ActiveWorkout />} />
                     <Route path="templates" element={<Templates />} />
+                    <Route path="templates/:id" element={<TemplateEdit />} />
                     <Route path="exercises" element={<Exercises />} />
                     <Route path="history" element={<History />} />
                     <Route path="analytics" element={<Analytics />} />

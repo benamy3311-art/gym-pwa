@@ -1,29 +1,30 @@
-import { useEffect, useState } from 'react';
-import { TemplateRepo } from '../../data/repositories';
-import { Template } from '../../domain/models';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTemplates } from './useTemplates';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { Plus, Trash2, LayoutList } from 'lucide-react';
 
 export default function Templates() {
-    const [templates, setTemplates] = useState<Template[]>([]);
+    const navigate = useNavigate();
+    const { templates, loadTemplates, addTemplate, deleteTemplate } = useTemplates();
 
     useEffect(() => {
-        TemplateRepo.getAll().then(setTemplates);
-    }, []);
+        loadTemplates();
+    }, [loadTemplates]);
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
         if (confirm('Are you sure you want to delete this routine?')) {
-            await TemplateRepo.delete(id);
-            setTemplates(templates.filter(t => t.id !== id));
+            await deleteTemplate(id);
         }
     };
 
     const handleCreate = async () => {
         const name = prompt('Routine Name:');
         if (name) {
-            const template = await TemplateRepo.add(name, []);
-            setTemplates([...templates, template]);
+            const template = await addTemplate(name);
+            navigate(`/templates/${template.id}`);
         }
     };
 
@@ -41,11 +42,16 @@ export default function Templates() {
 
             <div className="flex flex-col gap-3 pb-8 px-1">
                 {templates.map(t => (
-                    <GlassCard key={t.id} variant="elevated" className="flex flex-col gap-2 relative group tap-highlight">
+                    <GlassCard
+                        key={t.id}
+                        variant="elevated"
+                        className="flex flex-col gap-2 relative group tap-highlight cursor-pointer"
+                        onClick={() => navigate(`/templates/${t.id}`)}
+                    >
                         <div className="flex justify-between items-start">
                             <h3 className="font-semibold text-xl text-primary tracking-tight pr-10">{t.name}</h3>
                             <button
-                                onClick={() => handleDelete(t.id)}
+                                onClick={(e) => handleDelete(e, t.id)}
                                 className="absolute top-4 right-4 p-2 text-tertiary hover:text-red-400 hover:bg-black/20 focus:text-red-400 focus:bg-black/20 rounded-full transition-all tap-highlight"
                                 aria-label="Delete routine"
                             >

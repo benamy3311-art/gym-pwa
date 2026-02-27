@@ -19,6 +19,8 @@ export interface Template {
     id: string;
     name: string;
     exerciseIds: string[];
+    createdAt: number;
+    updatedAt: number;
 }
 
 export interface WorkoutSession {
