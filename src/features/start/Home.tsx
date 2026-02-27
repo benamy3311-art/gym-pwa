@@ -5,7 +5,7 @@ import { TemplateRepo } from '../../data/repositories';
 import { Template } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
-import { Play, Plus } from 'lucide-react';
+import { Play, Plus, ListVideo } from 'lucide-react';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -29,15 +29,15 @@ export default function Home() {
 
     if (activeSession) {
         return (
-            <div className="flex flex-col items-center justify-center flex-1 gap-6 mt-20">
-                <div className="w-24 h-24 bg-blue-500/20 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(59,130,246,0.5)]">
-                    <Play size={40} className="text-blue-400 ml-2" />
+            <div className="flex flex-col items-center justify-center flex-1 gap-6 mt-20 animate-in fade-in zoom-in-95 duration-500">
+                <div className="w-28 h-28 bg-accent/20 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_40px_rgba(10,132,255,0.4)]">
+                    <Play size={44} className="text-accent ml-2" />
                 </div>
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold tracking-tight mb-2">Workout in Progress</h2>
-                    <p className="text-white/60">{activeSession.name}</p>
+                <div className="text-center mt-4">
+                    <h2 className="text-2xl font-bold tracking-tight text-primary mb-1">Workout in Progress</h2>
+                    <p className="text-secondary text-lg font-medium">{activeSession.name}</p>
                 </div>
-                <GlassButton variant="primary" size="lg" onClick={() => navigate('/workout')} className="w-full max-w-xs py-4">
+                <GlassButton variant="primary" size="lg" onClick={() => navigate('/workout')} className="w-full max-w-xs py-4 mt-6">
                     Resume Workout
                 </GlassButton>
             </div>
@@ -46,35 +46,44 @@ export default function Home() {
 
     return (
         <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <header className="mb-2 mt-4">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent">Ready to lift?</h1>
-                <p className="text-white/60 text-lg">Start a new session or choose a template</p>
+            <header className="mb-2 mt-4 px-1">
+                <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-primary">Ready to lift?</h1>
+                <p className="text-secondary text-lg font-medium">Start a new session or choose a routine</p>
             </header>
 
-            <GlassButton variant="primary" size="lg" onClick={handleStartEmpty} className="w-full py-5 text-lg shadow-blue-500/20 shadow-lg">
+            <GlassButton variant="primary" size="lg" onClick={handleStartEmpty} className="w-full py-5 text-lg shadow-glass-sm mx-1">
                 Start Empty Workout
             </GlassButton>
 
-            <div className="mt-6">
+            <div className="mt-6 px-1">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold">My Templates</h2>
-                    <GlassButton size="sm" onClick={() => navigate('/templates')} className="text-sm">
+                    <h2 className="text-xl font-bold text-primary tracking-tight">My Routines</h2>
+                    <GlassButton size="sm" onClick={() => navigate('/templates')} className="text-sm px-3 rounded-full">
                         <Plus size={16} /> New
                     </GlassButton>
                 </div>
 
                 <div className="flex flex-col gap-3 pb-8">
                     {templates.length === 0 ? (
-                        <p className="text-white/40 text-center py-10 glass-panel rounded-2xl border-dashed">No templates yet. Create one to get started.</p>
+                        <div className="flex flex-col items-center justify-center text-secondary text-center py-12 px-6 bg-glass-inset rounded-3xl border border-glass-border/30">
+                            <ListVideo size={40} className="text-tertiary mb-3 opacity-50" />
+                            <p className="font-medium text-[15px]">No routines yet.</p>
+                            <p className="text-sm text-tertiary mt-1">Create one to get started quickly.</p>
+                        </div>
                     ) : (
                         templates.map(t => (
-                            <GlassCard key={t.id} className="flex justify-between items-center group cursor-pointer hover:bg-white/10 active:scale-[0.98] transition-all" onClick={() => handleStartTemplate(t)}>
+                            <GlassCard
+                                key={t.id}
+                                variant="elevated"
+                                className="tap-highlight flex justify-between items-center group cursor-pointer"
+                                onClick={() => handleStartTemplate(t)}
+                            >
                                 <div>
-                                    <h3 className="font-semibold text-lg">{t.name}</h3>
-                                    <p className="text-sm text-white/50 mt-1">{t.exerciseIds.length} exercises</p>
+                                    <h3 className="font-semibold text-lg text-primary tracking-tight">{t.name}</h3>
+                                    <p className="text-[13px] text-secondary mt-1 font-medium">{t.exerciseIds.length} exercises</p>
                                 </div>
-                                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-                                    <Play size={20} className="text-white/50 group-hover:text-blue-400 ml-1" />
+                                <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center group-hover:bg-accent/20 transition-colors shadow-inner-dark">
+                                    <Play size={18} className="text-tertiary group-hover:text-accent ml-0.5 transition-colors" />
                                 </div>
                             </GlassCard>
                         ))

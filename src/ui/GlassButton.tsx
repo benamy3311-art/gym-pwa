@@ -1,38 +1,43 @@
 import React from 'react';
-import { cn } from './GlassCard'; // using cn from here to save file count, or just move cn to a utils later
+import { cn } from '../utils/cn';
 
-interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
     size?: 'sm' | 'md' | 'lg';
 }
 
-export function GlassButton({
-    children,
-    className,
-    variant = 'secondary',
-    size = 'md',
-    ...props
-}: GlassButtonProps) {
+export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>(
+    ({ children, className, variant = 'secondary', size = 'md', ...props }, ref) => {
+        const variants = {
+            primary: 'bg-accent/80 hover:bg-accent border-accent/50 text-white shadow-glass-sm',
+            secondary: 'bg-glass-elevated border-glass-border hover:bg-white/20 text-primary shadow-glass-sm',
+            danger: 'bg-red-500/20 hover:bg-red-500/30 border-red-500/30 text-red-400',
+            ghost: 'bg-transparent border-transparent hover:bg-white/10 text-secondary hover:text-primary',
+        };
 
-    const variants = {
-        primary: 'bg-blue-600/50 hover:bg-blue-600/60 border-blue-400/30 text-white',
-        secondary: 'bg-white/10 hover:bg-white/15 border-white/10 text-white',
-        danger: 'bg-red-500/20 hover:bg-red-500/30 border-red-500/30 text-red-200',
-        ghost: 'bg-transparent border-transparent hover:bg-white/5 text-white/70 hover:text-white',
-    };
+        const sizes = {
+            sm: 'py-1.5 px-3 text-sm rounded-xl',
+            md: 'py-2.5 px-4 text-base rounded-2xl',
+            lg: 'py-3.5 px-6 text-lg rounded-3xl font-semibold tracking-wide',
+        };
 
-    const sizes = {
-        sm: 'py-1.5 px-3 text-sm rounded-lg',
-        md: 'py-2.5 px-4 text-base rounded-xl',
-        lg: 'py-3.5 px-6 text-lg rounded-xl font-semibold',
-    };
+        return (
+            <button
+                ref={ref}
+                className={cn(
+                    'tap-highlight relative overflow-hidden backdrop-blur-md font-medium border flex items-center justify-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-accent/50',
+                    variants[variant],
+                    sizes[size],
+                    className
+                )}
+                {...props}
+            >
+                {/* Subtle top inner light for depth */}
+                {variant !== 'ghost' && <div className="absolute inset-0 rounded-[inherit] shadow-inner-light pointer-events-none" />}
+                {children}
+            </button>
+        );
+    }
+);
 
-    return (
-        <button
-            className={cn('glass-button', variants[variant], sizes[size], className)}
-            {...props}
-        >
-            {children}
-        </button>
-    );
-}
+GlassButton.displayName = 'GlassButton';

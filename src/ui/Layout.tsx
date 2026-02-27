@@ -18,24 +18,26 @@ export default function Layout() {
     return (
         <div className="min-h-screen flex flex-col pb-20 md:pb-0 relative">
             {isResting && (
-                <div className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-r from-blue-600/90 to-blue-500/90 backdrop-blur-md text-white flex items-center justify-between px-6 z-[100] shadow-lg animate-in slide-in-from-top-4 duration-300 shadow-blue-500/20">
-                    <span className="font-semibold text-sm opacity-80 uppercase tracking-widest">Rest Timer</span>
-                    <span className="font-mono text-xl font-bold">{Math.floor(remainingSeconds / 60)}:{(remainingSeconds % 60).toString().padStart(2, '0')}</span>
-                    <button onClick={stopRest} className="px-3 py-1 bg-white/20 rounded-lg hover:bg-white/30 active:scale-95 transition-all text-sm font-medium">Skip</button>
+                <div className="fixed top-4 left-4 right-4 md:left-auto md:right-8 md:w-80 h-16 bg-glass-elevated border border-glass-border shadow-glass backdrop-blur-2xl rounded-3xl flex items-center justify-between px-5 z-[100] animate-in slide-in-from-top-6 duration-300">
+                    <div className="flex flex-col">
+                        <span className="font-semibold text-[10px] text-accent uppercase tracking-widest">Rest Timer</span>
+                        <span className="font-mono text-xl font-bold text-primary">{Math.floor(remainingSeconds / 60)}:{(remainingSeconds % 60).toString().padStart(2, '0')}</span>
+                    </div>
+                    <button onClick={stopRest} className="tap-highlight px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 text-primary text-sm font-semibold">Skip</button>
                 </div>
             )}
             <main className={`flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col ${isResting ? 'pt-16' : 'pt-8'}`}>
                 <Outlet />
             </main>
 
-            {/* Bottom Tab Bar for Mobile / Fixed Sidebar for Desktop */}
-            <nav className="fixed bottom-0 left-0 right-0 glass-panel border-b-0 border-x-0 rounded-t-3xl p-2 z-50 md:top-0 md:bottom-auto md:rounded-none md:border-t-0 md:border-b">
-                <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8">
-                    <NavItem to="/" icon={<Home size={20} />} label="Start" />
-                    <NavItem to="/templates" icon={<List size={20} />} label="Routines" />
-                    <NavItem to="/exercises" icon={<Dumbbell size={20} />} label="Exercises" />
-                    <NavItem to="/history" icon={<Clock size={20} />} label="History" />
-                    <NavItem to="/analytics" icon={<PieChart size={20} />} label="Analytics" />
+            {/* Liquid Glass Bottom Tab Bar */}
+            <nav className="fixed bottom-0 left-0 right-0 bg-glass-base border-t border-glass-border/50 backdrop-blur-xl pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b md:bg-glass-base shadow-glass-sm pb-1">
+                <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8 px-2 pt-2">
+                    <NavItem to="/" icon={<Home size={22} />} label="Start" />
+                    <NavItem to="/templates" icon={<List size={22} />} label="Routines" />
+                    <NavItem to="/exercises" icon={<Dumbbell size={22} />} label="Exercises" />
+                    <NavItem to="/history" icon={<Clock size={22} />} label="History" />
+                    <NavItem to="/analytics" icon={<PieChart size={22} />} label="Analytics" />
                 </div>
             </nav>
         </div>
@@ -47,12 +49,12 @@ function NavItem({ to, icon, label }: { to: string, icon: React.ReactNode, label
         <NavLink
             to={to}
             className={({ isActive }) => cn(
-                "flex flex-col items-center gap-1 p-2 rounded-xl transition-all",
-                isActive ? "text-blue-400" : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                "flex flex-col items-center gap-1 p-2 transition-all duration-300 w-16",
+                isActive ? "text-accent" : "text-secondary hover:text-primary"
             )}
         >
             {icon}
-            <span className="text-[10px] font-medium hidden md:block">{label}</span>
+            <span className="text-[10px] font-medium hidden md:block mt-1">{label}</span>
         </NavLink>
     );
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Exercise } from '../domain/models';
 import { MediaRepo } from '../data/mediaRepository';
 import { Dumbbell } from 'lucide-react';
-import { cn } from './GlassCard';
+import { cn } from '../utils/cn';
 
 interface Props {
     exercise: Exercise;
@@ -41,8 +41,8 @@ export function ExerciseImage({ exercise, className }: Props) {
     // Fallback
     if (!url) {
         return (
-            <div className={cn('flex items-center justify-center bg-white/10 shrink-0', className)}>
-                <Dumbbell className="text-white/50 w-1/2 h-1/2" />
+            <div className={cn('flex items-center justify-center bg-black/20 shrink-0 shadow-inner-dark rounded-xl', className)}>
+                <Dumbbell className="text-tertiary w-1/2 h-1/2 opacity-50" />
             </div>
         );
     }

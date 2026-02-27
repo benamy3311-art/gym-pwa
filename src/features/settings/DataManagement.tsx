@@ -55,23 +55,23 @@ export function DataManagement() {
     };
 
     return (
-        <GlassCard className="p-4 mt-8 flex flex-col gap-4">
-            <h3 className="text-sm font-semibold text-white/80 uppercase tracking-widest border-b border-white/10 pb-2">
+        <GlassCard variant="inset" className="p-5 mt-4 flex flex-col gap-4">
+            <h3 className="text-[13px] font-bold text-tertiary uppercase tracking-widest border-b border-glass-border/30 pb-3">
                 Data Management
             </h3>
             <div className="flex gap-3">
-                <GlassButton variant="secondary" onClick={handleExport} className="flex-1 text-sm bg-blue-500/20 hover:bg-blue-500/40 border-blue-500/30">
-                    <Download size={16} className="mr-2" /> Backup Data
+                <GlassButton variant="secondary" onClick={handleExport} className="flex-1 text-[13px] font-semibold bg-accent/10 hover:bg-accent/20 border-accent/20 text-accent rounded-xl shadow-inner-dark">
+                    <Download size={16} className="mr-1.5" /> Backup
                 </GlassButton>
-                <GlassButton variant="secondary" onClick={() => fileRef.current?.click()} className="flex-1 text-sm bg-purple-500/20 hover:bg-purple-500/40 border-purple-500/30">
-                    <Upload size={16} className="mr-2" /> Restore Backup
+                <GlassButton variant="secondary" onClick={() => fileRef.current?.click()} className="flex-1 text-[13px] font-semibold bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/20 text-purple-400 rounded-xl shadow-inner-dark">
+                    <Upload size={16} className="mr-1.5" /> Restore
                 </GlassButton>
             </div>
-            <GlassButton variant="secondary" onClick={handleLoadDefaults} className="w-full text-sm bg-green-500/20 hover:bg-green-500/40 border-green-500/30">
-                <Database size={16} className="mr-2" /> Load Predefined Exercises
+            <GlassButton variant="secondary" onClick={handleLoadDefaults} className="w-full text-sm font-semibold bg-green-500/10 hover:bg-green-500/20 border-green-500/20 text-green-500 rounded-xl shadow-inner-dark">
+                <Database size={16} className="mr-1.5" /> Load Predefined Exercises
             </GlassButton>
             <input type="file" accept=".json" style={{ display: 'none' }} ref={fileRef} onChange={handleImport} />
-            <p className="text-xs text-white/40 text-center">Your data is stored securely offline on this device.</p>
+            <p className="text-[11px] font-medium text-tertiary text-center uppercase tracking-widest mt-1">Stored securely offline</p>
         </GlassCard>
     );
 }

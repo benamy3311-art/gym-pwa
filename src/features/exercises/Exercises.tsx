@@ -64,27 +64,30 @@ export default function Exercises() {
     const filtered = exercises.filter(e => e.name.toLowerCase().includes(search.toLowerCase()));
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <header className="flex flex-col gap-4 mb-2 mt-4">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold tracking-tight">Exercises</h1>
-                    <GlassButton variant="primary" onClick={handleCreate}>
+        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+            <header className="flex flex-col gap-3 mb-1 mt-4 px-1">
+                <div className="flex items-end justify-between">
+                    <div>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-1">Exercises</h1>
+                        <p className="text-secondary font-medium">Manage your library</p>
+                    </div>
+                    <GlassButton variant="primary" size="sm" onClick={handleCreate} className="rounded-full w-10 h-10 p-0 mb-1">
                         <Plus size={20} />
                     </GlassButton>
                 </div>
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+                <div className="relative mt-2">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-tertiary" size={18} />
                     <GlassInput
                         type="text"
                         placeholder="Search exercises..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="pl-10 h-12 rounded-xl"
+                        className="pl-12 h-12 rounded-2xl bg-black/10 border-black/10 text-[15px]"
                     />
                 </div>
             </header>
 
-            <div className="flex flex-col gap-3 pb-8">
+            <div className="flex flex-col gap-3 px-1">
                 <input
                     type="file"
                     accept="image/*"
@@ -94,26 +97,28 @@ export default function Exercises() {
                 />
 
                 {filtered.map(ex => (
-                    <GlassCard key={ex.id} className="flex items-center gap-4 py-3 group">
+                    <GlassCard key={ex.id} variant="elevated" className="flex items-center gap-4 py-3 px-4 group tap-highlight hover:bg-white/10 transition-colors cursor-pointer">
                         <div className="relative shrink-0">
-                            <ExerciseImage exercise={ex} className="w-12 h-12 rounded-xl" />
+                            <ExerciseImage exercise={ex} className="w-[52px] h-[52px] rounded-xl shadow-sm" />
                             <button
                                 onClick={(e) => { e.stopPropagation(); uploadClick(ex); }}
-                                className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg text-white"
+                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_4px_10px_rgba(10,132,255,0.4)] text-white tap-highlight"
                             >
-                                <ImagePlus size={12} />
+                                <ImagePlus size={14} />
                             </button>
                         </div>
                         <div className="flex-1">
-                            <p className="font-semibold text-lg">{ex.name}</p>
-                            {ex.bodyPart && <p className="text-xs text-white/50">{ex.bodyPart}</p>}
+                            <p className="font-bold text-[17px] text-primary tracking-tight">{ex.name}</p>
+                            {ex.bodyPart && <p className="text-[13px] font-medium text-secondary mt-0.5">{ex.bodyPart}</p>}
                         </div>
                     </GlassCard>
                 ))}
+
                 {filtered.length === 0 && (
-                    <div className="text-center py-10 glass-panel rounded-2xl border-dashed">
-                        <Dumbbell size={40} className="mx-auto text-white/20 mb-3" />
-                        <p className="text-white/50">No exercises found.</p>
+                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-glass-inset rounded-3xl border border-glass-border/30 mt-2">
+                        <Dumbbell size={48} className="text-tertiary mb-4 opacity-50" />
+                        <p className="font-medium text-primary text-lg tracking-tight">No exercises found.</p>
+                        <p className="text-[15px] text-secondary mt-1 max-w-[200px]">Try adjusting your search or create a new one.</p>
                     </div>
                 )}
             </div>
