@@ -49,8 +49,8 @@ export default function Templates() {
             <header className="flex flex-col gap-3 mb-2 mt-4 px-1">
                 <div className="flex items-end justify-between">
                     <div>
-                        <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-1">Routines</h1>
-                        <p className="text-secondary font-medium">Manage your custom workouts</p>
+                        <h1 className="ios-title mb-1">Routines</h1>
+                        <p className="ios-body text-[color:var(--text-secondary)]">Manage your custom workouts</p>
                     </div>
                     <GlassButton variant="primary" size="sm" onClick={handleCreate} className="rounded-full w-10 h-10 p-0 mb-1">
                         <Plus size={20} />
@@ -77,7 +77,7 @@ export default function Templates() {
                         onClick={() => navigate(`/templates/${t.id}`)}
                     >
                         <div className="flex justify-between items-start">
-                            <h3 className="font-semibold text-xl text-primary tracking-tight pr-10">{t.name}</h3>
+                            <h3 className="ios-h3 pr-10">{t.name}</h3>
                             <button
                                 onClick={(e) => handleDelete(e, t.id)}
                                 className="absolute top-4 right-4 p-2 text-tertiary hover:text-red-400 hover:bg-black/20 focus:text-red-400 focus:bg-black/20 rounded-full transition-all tap-highlight"
@@ -86,15 +86,15 @@ export default function Templates() {
                                 <Trash2 size={18} />
                             </button>
                         </div>
-                        <p className="text-[13px] text-secondary font-medium mt-1">{t.exerciseIds.length} exercises configured</p>
+                        <p className="ios-subhead text-[color:var(--text-secondary)] mt-1">{t.exerciseIds.length} exercises configured</p>
                     </GlassCard>
                 ))}
 
                 {templates.length === 0 && (
                     <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-glass-inset rounded-3xl border border-glass-border/30 mt-4">
                         <LayoutList size={48} className="text-tertiary mb-4 opacity-50" />
-                        <p className="font-medium text-primary text-lg tracking-tight">No routines found.</p>
-                        <p className="text-[15px] text-secondary mt-1 max-w-[200px]">Create a new routine to save your favourite exercises.</p>
+                        <p className="font-medium text-[color:var(--text-primary)] text-lg tracking-tight">No routines found.</p>
+                        <p className="text-[15px] text-[color:var(--text-secondary)] mt-1 max-w-[200px]">Create a new routine to save your favourite exercises.</p>
                     </div>
                 )}
             </div>

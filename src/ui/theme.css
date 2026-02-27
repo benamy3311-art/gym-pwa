@@ -28,24 +28,26 @@
     /* Standard iOS grouped background */
     --bg-surface: #ffffff;
 
-    --text-primary: #000000;
-    --text-secondary: rgba(60, 60, 67, 0.65);
-    --text-tertiary: rgba(60, 60, 67, 0.3);
+    --text-primary: #111111;
+    --text-secondary: #4b5563;
+    /* Legible gray (Tailwind gray-600) */
+    --text-tertiary: #6b7280;
+    /* Legible tertiary (Tailwind gray-500) */
 
     --accent: #ff2a4b;
     --accent-hover: #e00028;
 
     /* Light mode surfaces need high opacity to prevent illegible bleeding */
-    --glass-base: rgba(255, 255, 255, 0.95);
+    --glass-base: rgba(255, 255, 255, 0.98);
     --glass-elevated: rgba(255, 255, 255, 1);
-    --glass-inset: rgba(0, 0, 0, 0.04);
+    --glass-inset: rgba(0, 0, 0, 0.05);
 
-    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border: rgba(0, 0, 0, 0.12);
     /* Darker border separates cards from light background */
-    --glass-highlight: rgba(255, 255, 255, 0.8);
+    --glass-highlight: rgba(255, 255, 255, 0.9);
 
-    --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 body {

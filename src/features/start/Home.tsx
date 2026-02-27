@@ -6,6 +6,8 @@ import { Template } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { Play, Plus, ListVideo } from 'lucide-react';
+import { sortTemplates } from '../../utils/templateUtils';
+import { startWorkoutFromTemplate } from '../workout/startWorkoutFromTemplate';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -14,7 +16,7 @@ export default function Home() {
 
     useEffect(() => {
         loadActiveWorkout();
-        TemplateRepo.getAll().then(setTemplates);
+        TemplateRepo.getAll().then(data => setTemplates(sortTemplates(data)));
     }, []);
 
     const handleStartEmpty = async () => {
@@ -23,8 +25,13 @@ export default function Home() {
     };
 
     const handleStartTemplate = async (template: Template) => {
-        await startWorkout(template.name, template.id);
-        navigate('/workout');
+        try {
+            await startWorkoutFromTemplate(template.id);
+            await loadActiveWorkout();
+            navigate('/workout');
+        } catch (error: any) {
+            alert(error.message || 'Error starting workout');
+        }
     };
 
     if (activeSession) {

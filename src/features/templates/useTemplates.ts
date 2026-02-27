@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Template } from '../../domain/models';
 import { TemplateRepo } from '../../data/repositories';
+import { sortTemplates } from '../../utils/templateUtils';
 
 interface TemplateState {
     templates: Template[];
@@ -18,7 +19,7 @@ export const useTemplates = create<TemplateState>((set, get) => ({
     loadTemplates: async () => {
         set({ isLoading: true });
         const data = await TemplateRepo.getAll();
-        set({ templates: data, isLoading: false });
+        set({ templates: sortTemplates(data), isLoading: false });
     },
     addTemplate: async (name: string) => {
         const t = await TemplateRepo.add(name, []);

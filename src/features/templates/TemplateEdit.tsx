@@ -47,7 +47,7 @@ export function TemplateEdit() {
     }, [allExercises, searchTerm]);
 
     if (!template) {
-        return <div className="p-8 text-center text-secondary">Loading template...</div>;
+        return <div className="p-8 text-center text-[color:var(--text-secondary)]">Loading template...</div>;
     }
 
     if (isAdding) {
@@ -77,8 +77,8 @@ export function TemplateEdit() {
                                 <div className="flex items-center gap-3">
                                     <ExerciseImage exercise={ex} className="w-12 h-12 rounded-xl shadow-sm" />
                                     <div>
-                                        <p className="font-semibold text-primary text-[15px]">{ex.name}</p>
-                                        <p className="text-secondary text-[12px]">{ex.bodyPart || 'Various'}</p>
+                                        <p className="font-semibold text-[color:var(--text-primary)] text-[15px]">{ex.name}</p>
+                                        <p className="text-[color:var(--text-secondary)] text-[12px]">{ex.bodyPart || 'Various'}</p>
                                     </div>
                                 </div>
                                 <GlassButton
@@ -106,8 +106,8 @@ export function TemplateEdit() {
                         <ArrowLeft size={24} />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-primary">{template.name}</h1>
-                        <p className="text-secondary font-medium text-[13px]">{templateExercises.length} exercises</p>
+                        <h1 className="text-2xl font-bold tracking-tight text-[color:var(--text-primary)]">{template.name}</h1>
+                        <p className="text-[color:var(--text-secondary)] font-medium text-[13px]">{templateExercises.length} exercises</p>
                     </div>
                 </div>
             </header>
@@ -119,8 +119,8 @@ export function TemplateEdit() {
                             <span className="text-tertiary font-bold text-sm w-4">{idx + 1}</span>
                             <ExerciseImage exercise={ex} className="w-12 h-12 rounded-xl shadow-sm" />
                             <div>
-                                <p className="font-semibold text-primary text-[15px]">{ex.name}</p>
-                                <p className="text-secondary text-[12px]">{ex.bodyPart}</p>
+                                <p className="font-semibold text-[color:var(--text-primary)] text-[15px]">{ex.name}</p>
+                                <p className="text-[color:var(--text-secondary)] text-[12px]">{ex.bodyPart}</p>
                             </div>
                         </div>
                         <button

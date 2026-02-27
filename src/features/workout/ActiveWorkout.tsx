@@ -74,7 +74,7 @@ export default function ActiveWorkout() {
             <header className="flex flex-col gap-2 pt-2 sticky top-0 bg-glass-base/90 backdrop-blur-2xl z-20 pb-4 border-b border-glass-border/30 shadow-sm mx-[-16px] px-4 md:mx-0 md:px-0">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl flex items-center gap-2 font-bold tracking-tight text-primary">
+                        <h1 className="ios-h1 flex items-center gap-2">
                             {activeSession.name}
                         </h1>
                         <p className="text-sm text-accent font-mono flex items-center gap-1.5 mt-0.5 font-medium">
@@ -100,7 +100,7 @@ export default function ActiveWorkout() {
                                     <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center border border-white/5">
                                         <BodyPartIcon bodyPart={ex?.bodyPart} variant="front" size="sm" />
                                     </div>
-                                    <h3 className="font-bold text-lg text-primary tracking-tight">{ex?.name || 'Unknown Exercise'}</h3>
+                                    <h3 className="ios-h3 truncate max-w-[200px]">{ex?.name || 'Unknown Exercise'}</h3>
                                 </div>
                                 <button
                                     onClick={() => confirm('Remove exercise?') && removeExercise(entry.id)}
@@ -111,12 +111,12 @@ export default function ActiveWorkout() {
                             </div>
 
                             {/* Headings */}
-                            <div className="grid grid-cols-[30px_1fr_1fr_1fr_40px] md:grid-cols-[40px_1fr_1fr_1fr_50px] gap-2 text-[11px] font-semibold text-secondary uppercase tracking-wider px-1">
-                                <div className="text-center">Set</div>
-                                <div className="text-center opacity-70">Prev</div>
-                                <div className="text-center">{activeSession.unit}</div>
-                                <div className="text-center">Reps</div>
-                                <div className="text-center">✓</div>
+                            <div className="grid grid-cols-[30px_1fr_1fr_1fr_40px] md:grid-cols-[40px_1fr_1fr_1fr_50px] gap-2 ios-caption font-semibold text-secondary uppercase tracking-wider px-1">
+                                <div className="text-center opacity-80">Set</div>
+                                <div className="text-center opacity-60">Prev</div>
+                                <div className="text-center opacity-80">{activeSession.unit}</div>
+                                <div className="text-center opacity-80">Reps</div>
+                                <div className="text-center opacity-80">✓</div>
                             </div>
 
                             {/* Sets */}
