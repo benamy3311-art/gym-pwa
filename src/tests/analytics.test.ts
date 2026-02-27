@@ -17,8 +17,8 @@ describe('Analytics Domain Calculations', () => {
     ];
 
     const mockSets: SetEntry[] = [
-        { id: 'set1', entryId: 'e1', weight: 100, reps: 5, isDone: true },
-        { id: 'set2', entryId: 'e2', weight: 110, reps: 5, isDone: true }
+        { id: 'set1', entryId: 'e1', setNumber: 1, weight: 100, reps: 5, isDone: true, createdAt: now },
+        { id: 'set2', entryId: 'e2', setNumber: 1, weight: 110, reps: 5, isDone: true, createdAt: now }
     ];
 
     const mockPRs: PR[] = [
