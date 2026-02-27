@@ -2,7 +2,8 @@ import { useRef } from 'react';
 import { exportData, importData } from '../../utils/backup';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
-import { Download, Upload } from 'lucide-react';
+import { Download, Upload, Database } from 'lucide-react';
+import { seedDefaultExercises } from '../../data/db';
 
 export function DataManagement() {
     const fileRef = useRef<HTMLInputElement>(null);
@@ -41,6 +42,18 @@ export function DataManagement() {
         reader.readAsText(file);
     };
 
+    const handleLoadDefaults = async () => {
+        if (confirm("Load default predefined exercises? (Won't duplicate existing ones)")) {
+            try {
+                await seedDefaultExercises();
+                alert('Default exercises loaded! Refreshing...');
+                window.location.reload();
+            } catch (err: any) {
+                alert("Failed to load defaults: " + err.message);
+            }
+        }
+    };
+
     return (
         <GlassCard className="p-4 mt-8 flex flex-col gap-4">
             <h3 className="text-sm font-semibold text-white/80 uppercase tracking-widest border-b border-white/10 pb-2">
@@ -54,6 +67,9 @@ export function DataManagement() {
                     <Upload size={16} className="mr-2" /> Restore Backup
                 </GlassButton>
             </div>
+            <GlassButton variant="secondary" onClick={handleLoadDefaults} className="w-full text-sm bg-green-500/20 hover:bg-green-500/40 border-green-500/30">
+                <Database size={16} className="mr-2" /> Load Predefined Exercises
+            </GlassButton>
             <input type="file" accept=".json" style={{ display: 'none' }} ref={fileRef} onChange={handleImport} />
             <p className="text-xs text-white/40 text-center">Your data is stored securely offline on this device.</p>
         </GlassCard>
