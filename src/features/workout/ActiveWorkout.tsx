@@ -111,12 +111,12 @@ export default function ActiveWorkout() {
                             </div>
 
                             {/* Headings */}
-                            <div className="grid grid-cols-[40px_70px_1fr_1fr_40px] gap-3 ios-caption font-bold text-secondary uppercase tracking-tighter px-1">
+                            <div className="grid grid-cols-[36px_66px_1fr_1fr_36px] gap-2 ios-caption font-bold text-secondary uppercase tracking-tighter px-1 mb-1">
                                 <div className="text-center opacity-70">Set</div>
                                 <div className="text-center opacity-50">Prev</div>
                                 <div className="text-center opacity-80">{activeSession.unit}</div>
                                 <div className="text-center opacity-80">Reps</div>
-                                <div className="text-center opacity-80">✓</div>
+                                <div className="text-center opacity-70">✓</div>
                             </div>
 
                             {/* Sets */}
@@ -128,13 +128,13 @@ export default function ActiveWorkout() {
                                     return (
                                         <div
                                             key={set.id}
-                                            className={`grid grid-cols-[40px_70px_1fr_1fr_40px] gap-3 items-center transition-all duration-300 ${set.isDone ? 'opacity-50 grayscale-[40%]' : ''}`}
+                                            className={`grid grid-cols-[36px_66px_1fr_1fr_36px] gap-2 items-center transition-all duration-300 ${set.isDone ? 'opacity-50 grayscale-[40%]' : ''}`}
                                         >
-                                            <div className="text-center font-mono text-tertiary text-xs font-bold tabular-nums">
+                                            <div className="text-center font-mono text-tertiary text-[11px] font-bold tabular-nums">
                                                 {index + 1}
                                             </div>
 
-                                            <div className="text-center font-mono text-secondary text-[11px] flex items-center justify-center bg-black/10 rounded-full h-11 shadow-inner-dark border border-white/5 px-1 overflow-hidden whitespace-nowrap tabular-nums">
+                                            <div className="text-center font-mono text-secondary text-[11px] flex items-center justify-center bg-black/10 rounded-full h-10 shadow-inner-dark border border-white/5 min-w-0 overflow-hidden whitespace-nowrap tabular-nums">
                                                 {prevStr}
                                             </div>
 
@@ -144,7 +144,8 @@ export default function ActiveWorkout() {
                                                 value={set.weight || ''}
                                                 onChange={e => updateSet(set.id, entry.id, { weight: parseFloat(e.target.value) || 0 })}
                                                 placeholder="0"
-                                                className="h-11 text-center font-bold text-base px-2 bg-black/20 rounded-2xl tabular-nums focus:bg-black/40 transition-colors"
+                                                containerClassName="mx-auto w-full max-w-[80px]"
+                                                className="h-10 text-center font-bold text-base p-0 bg-black/20 rounded-full tabular-nums focus:bg-black/40 transition-colors border-white/5"
                                                 disabled={set.isDone}
                                             />
 
@@ -154,7 +155,8 @@ export default function ActiveWorkout() {
                                                 value={set.reps || ''}
                                                 onChange={e => updateSet(set.id, entry.id, { reps: parseInt(e.target.value) || 0 })}
                                                 placeholder="0"
-                                                className="h-11 text-center font-bold text-base px-2 bg-black/20 rounded-2xl tabular-nums focus:bg-black/40 transition-colors"
+                                                containerClassName="mx-auto w-full max-w-[80px]"
+                                                className="h-10 text-center font-bold text-base p-0 bg-black/20 rounded-full tabular-nums focus:bg-black/40 transition-colors border-white/5"
                                                 disabled={set.isDone}
                                             />
 
@@ -173,12 +175,12 @@ export default function ActiveWorkout() {
                                                         });
                                                     }
                                                 }}
-                                                className={`h-11 w-full rounded-2xl flex items-center justify-center transition-all tap-highlight ${set.isDone
-                                                    ? 'bg-green-500/20 text-green-400 border border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.2)]'
+                                                className={`h-10 w-full rounded-2xl flex items-center justify-center transition-all tap-highlight ${set.isDone
+                                                    ? 'bg-green-500/20 text-green-400 border border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.15)]'
                                                     : 'bg-glass-inset text-tertiary hover:bg-black/30 hover:text-secondary border border-glass-border/30 shadow-inner-dark'
                                                     }`}
                                             >
-                                                <Check size={20} strokeWidth={set.isDone ? 3.5 : 2.5} />
+                                                <Check size={18} strokeWidth={set.isDone ? 3.5 : 2.5} />
                                             </button>
                                         </div>
                                     );
