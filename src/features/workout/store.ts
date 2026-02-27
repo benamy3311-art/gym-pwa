@@ -16,7 +16,7 @@ interface WorkoutState {
     addExercise: (exerciseId: string) => Promise<void>;
     addSet: (entryId: string, explicitWeight?: number, explicitReps?: number) => Promise<void>;
     updateSet: (setId: string, entryId: string, updates: Partial<SetEntry>) => Promise<void>;
-    toggleSetDone: (setId: string, entryId: string, exerciseId: string) => Promise<void>;
+    toggleSetDone: (setId: string, entryId: string, exerciseId: string) => Promise<{ isNewlyDone: boolean; setNumber: number } | void>;
     undoLastSet: () => Promise<void>;
     removeSet: (setId: string, entryId: string) => Promise<void>;
     removeExercise: (entryId: string) => Promise<void>;
@@ -134,9 +134,11 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
         if (!activeSession) return;
 
         const currentSets = setsByEntry[entryId] || [];
-        const setTarget = currentSets.find(s => s.id === setId);
+        const setIndex = currentSets.findIndex(s => s.id === setId);
+        const setTarget = currentSets[setIndex];
         if (!setTarget) return;
 
+        const setNumber = setIndex + 1;
         const newIsDone = !setTarget.isDone;
         await WorkoutRepo.updateSet(setId, { isDone: newIsDone });
 
@@ -153,6 +155,8 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
                 await PRRepo.savePRs(newPRs);
             }
         }
+
+        return { isNewlyDone: newIsDone, setNumber };
     },
 
     undoLastSet: async () => {

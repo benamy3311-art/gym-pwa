@@ -1,38 +1,74 @@
 import { create } from 'zustand';
 
+export interface RestSource {
+    sessionId: string;
+    entryId: string;
+    exerciseId: string;
+    exerciseName: string;
+    setEntryId: string;
+    setNumber: number;
+}
+
 interface RestState {
-    isResting: boolean;
-    restDuration: number;
-    remainingSeconds: number;
-    startRest: (duration: number) => void;
-    stopRest: () => void;
-    tick: () => void;
+    isActive: boolean;
+    remainingMs: number;
+    totalMs: number;
+    startedAt: number | null;
+    source: RestSource | null;
+
+    startRest: (ms: number, source?: RestSource) => void;
+    extend: (ms: number) => void;
+    skip: () => void;
+    stop: () => void;
+    tick: (now: number) => void;
 }
 
 export const useRestStore = create<RestState>((set, get) => ({
-    isResting: false,
-    restDuration: 90,
-    remainingSeconds: 0,
+    isActive: false,
+    remainingMs: 0,
+    totalMs: 0,
+    startedAt: null,
+    source: null,
 
-    startRest: (duration) => {
-        set({ isResting: true, restDuration: duration, remainingSeconds: duration });
+    startRest: (ms, source = undefined) => {
+        set({
+            isActive: true,
+            totalMs: ms,
+            remainingMs: ms,
+            startedAt: Date.now(),
+            source: source || null
+        });
     },
 
-    stopRest: () => {
-        set({ isResting: false, remainingSeconds: 0 });
+    extend: (ms) => {
+        const { isActive, totalMs, remainingMs } = get();
+        if (!isActive) return;
+        set({
+            totalMs: totalMs + ms,
+            remainingMs: remainingMs + ms
+        });
     },
 
-    tick: () => {
-        const { isResting, remainingSeconds } = get();
-        if (!isResting) return;
+    skip: () => {
+        set({ isActive: false, remainingMs: 0, totalMs: 0, startedAt: null, source: null });
+    },
 
-        if (remainingSeconds <= 1) {
-            if ('vibrate' in navigator) {
-                navigator.vibrate([200, 100, 200]);
-            }
-            set({ isResting: false, remainingSeconds: 0 });
+    stop: () => {
+        set({ isActive: false, remainingMs: 0, totalMs: 0, startedAt: null, source: null });
+    },
+
+    tick: (now) => {
+        const { isActive, startedAt, totalMs } = get();
+        if (!isActive || !startedAt) return;
+
+        const elapsed = now - startedAt;
+        const remain = Math.max(0, totalMs - elapsed);
+
+        if (remain === 0) {
+            if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+            set({ isActive: false, remainingMs: 0, startedAt: null, source: null });
         } else {
-            set({ remainingSeconds: remainingSeconds - 1 });
+            set({ remainingMs: remain });
         }
     }
 }));

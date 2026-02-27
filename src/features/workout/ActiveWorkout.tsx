@@ -8,6 +8,7 @@ import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
 import { Plus, Trash2, Check, Clock, Search, Undo2, Timer } from 'lucide-react';
+import { RestTimerOverlay } from './RestTimerOverlay';
 
 export default function ActiveWorkout() {
     const navigate = useNavigate();
@@ -152,7 +153,20 @@ export default function ActiveWorkout() {
                                             />
 
                                             <button
-                                                onClick={() => toggleSetDone(set.id, entry.id, entry.exerciseId)}
+                                                onClick={async () => {
+                                                    const result = await toggleSetDone(set.id, entry.id, entry.exerciseId);
+                                                    if (result && result.isNewlyDone) {
+                                                        const ex = exercises.find(e => e.id === entry.exerciseId);
+                                                        startRest(90000, {
+                                                            sessionId: activeSession.id,
+                                                            entryId: entry.id,
+                                                            exerciseId: entry.exerciseId,
+                                                            exerciseName: ex ? ex.name : 'Unknown Exercise',
+                                                            setEntryId: set.id,
+                                                            setNumber: result.setNumber
+                                                        });
+                                                    }
+                                                }}
                                                 className={`h-12 rounded-2xl flex items-center justify-center transition-all tap-highlight ${set.isDone
                                                     ? 'bg-green-500/20 text-green-400 border border-green-500/40 shadow-[0_0_20px_rgba(34,197,94,0.25)]'
                                                     : 'bg-glass-inset text-tertiary hover:bg-black/30 hover:text-secondary border border-glass-border/30 shadow-inner-dark'
@@ -197,12 +211,9 @@ export default function ActiveWorkout() {
             </div>
 
             {lastDoneSet && (
-                <div className="fixed bottom-20 md:bottom-24 left-4 right-4 md:left-auto md:w-[380px] md:right-6 bg-glass-elevated backdrop-blur-3xl border border-glass-border rounded-[28px] p-2.5 flex gap-2.5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-50 animate-in slide-in-from-bottom-10 fade-in duration-400 ease-spring">
-                    <GlassButton size="md" onClick={() => undoLastSet()} className="flex-1 bg-black/30 hover:bg-black/50 border-white/5 text-secondary shadow-inner-dark hover:text-primary rounded-2xl">
+                <div className="fixed bottom-20 md:bottom-24 left-4 right-4 md:left-auto md:w-auto md:right-6 bg-glass-elevated backdrop-blur-3xl border border-glass-border rounded-full p-2 flex shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-40 animate-in slide-in-from-bottom-10 fade-in duration-400 ease-spring">
+                    <GlassButton size="md" onClick={() => undoLastSet()} className="flex-1 px-6 bg-black/30 border-white/5 text-secondary shadow-inner-dark hover:text-primary rounded-full">
                         <Undo2 size={18} /> Undo Set
-                    </GlassButton>
-                    <GlassButton variant="primary" size="md" onClick={() => startRest(90)} className="flex-1 shadow-glass-sm rounded-2xl font-bold bg-accent hover:bg-accent-hover text-[#ffffff]">
-                        <Timer size={18} /> Rest 90s
                     </GlassButton>
                 </div>
             )}
@@ -243,6 +254,8 @@ export default function ActiveWorkout() {
                     </div>
                 </div>
             )}
+
+            <RestTimerOverlay />
         </div>
     );
 }
