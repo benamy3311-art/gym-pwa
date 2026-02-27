@@ -6,8 +6,30 @@ import History from './features/history/History';
 import Exercises from './features/exercises/Exercises';
 import Analytics from './features/analytics/Analytics';
 import Layout from './ui/Layout';
+import { useEffect } from 'react';
+import { useThemeStore } from './store/themeStore';
 
 function App() {
+    const { theme } = useThemeStore();
+
+    useEffect(() => {
+        const root = document.documentElement;
+
+        const applyTheme = (t: 'dark' | 'light') => {
+            root.setAttribute('data-theme', t);
+        };
+
+        if (theme === 'system') {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+            applyTheme(mediaQuery.matches ? 'light' : 'dark');
+
+            const listener = (e: MediaQueryListEvent) => applyTheme(e.matches ? 'light' : 'dark');
+            mediaQuery.addEventListener('change', listener);
+            return () => mediaQuery.removeEventListener('change', listener);
+        } else {
+            applyTheme(theme);
+        }
+    }, [theme]);
     return (
         <BrowserRouter>
             <Routes>

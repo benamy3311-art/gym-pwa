@@ -2,11 +2,14 @@ import { useRef } from 'react';
 import { exportData, importData } from '../../utils/backup';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
-import { Download, Upload, Database } from 'lucide-react';
+import { Download, Upload, Database, Sun, Moon, Monitor } from 'lucide-react';
 import { seedDefaultExercises } from '../../data/db';
+import { useThemeStore } from '../../store/themeStore';
+import { cn } from '../../utils/cn';
 
 export function DataManagement() {
     const fileRef = useRef<HTMLInputElement>(null);
+    const { theme, setTheme } = useThemeStore();
 
     const handleExport = async () => {
         try {
@@ -57,8 +60,26 @@ export function DataManagement() {
     return (
         <GlassCard variant="inset" className="p-5 mt-4 flex flex-col gap-4">
             <h3 className="text-[13px] font-bold text-tertiary uppercase tracking-widest border-b border-glass-border/30 pb-3">
-                Data Management
+                Settings & Data
             </h3>
+
+            {/* Theme Toggle */}
+            <div className="flex flex-col gap-2 mb-2">
+                <h4 className="text-[10px] font-bold text-tertiary uppercase tracking-widest mt-1">Appearance</h4>
+                <div className="flex gap-1.5 bg-black/20 p-1.5 rounded-xl shadow-inner-dark border border-glass-border/30">
+                    <button onClick={() => setTheme('dark')} className={cn("flex-1 py-1.5 flex items-center justify-center gap-1.5 text-[11px] font-bold rounded-lg transition-all tap-highlight", theme === 'dark' ? "bg-glass-elevated text-primary shadow-sm" : "text-secondary hover:text-primary")}>
+                        <Moon size={14} /> Dark
+                    </button>
+                    <button onClick={() => setTheme('light')} className={cn("flex-1 py-1.5 flex items-center justify-center gap-1.5 text-[11px] font-bold rounded-lg transition-all tap-highlight", theme === 'light' ? "bg-glass-elevated text-primary shadow-sm" : "text-secondary hover:text-primary")}>
+                        <Sun size={14} /> Light
+                    </button>
+                    <button onClick={() => setTheme('system')} className={cn("flex-1 py-1.5 flex items-center justify-center gap-1.5 text-[11px] font-bold rounded-lg transition-all tap-highlight", theme === 'system' ? "bg-glass-elevated text-primary shadow-sm" : "text-secondary hover:text-primary")}>
+                        <Monitor size={14} /> Auto
+                    </button>
+                </div>
+            </div>
+
+            <h4 className="text-[10px] font-bold text-tertiary uppercase tracking-widest mt-2 border-t border-glass-border/30 pt-4">Data Management</h4>
             <div className="flex gap-3">
                 <GlassButton variant="secondary" onClick={handleExport} className="flex-1 text-[13px] font-semibold bg-accent/10 hover:bg-accent/20 border-accent/20 text-accent rounded-xl shadow-inner-dark">
                     <Download size={16} className="mr-1.5" /> Backup
