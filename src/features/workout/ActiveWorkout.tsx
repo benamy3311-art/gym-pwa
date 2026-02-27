@@ -201,7 +201,7 @@ export default function ActiveWorkout() {
                     <GlassButton size="md" onClick={() => undoLastSet()} className="flex-1 bg-black/30 hover:bg-black/50 border-white/5 text-secondary shadow-inner-dark hover:text-primary rounded-2xl">
                         <Undo2 size={18} /> Undo Set
                     </GlassButton>
-                    <GlassButton variant="primary" size="md" onClick={() => startRest(90)} className="flex-1 shadow-glass-sm rounded-2xl font-bold bg-accent hover:bg-accent-hover text-white">
+                    <GlassButton variant="primary" size="md" onClick={() => startRest(90)} className="flex-1 shadow-glass-sm rounded-2xl font-bold bg-accent hover:bg-accent-hover text-[#ffffff]">
                         <Timer size={18} /> Rest 90s
                     </GlassButton>
                 </div>

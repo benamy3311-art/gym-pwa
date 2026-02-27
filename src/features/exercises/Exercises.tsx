@@ -102,7 +102,7 @@ export default function Exercises() {
                             <ExerciseImage exercise={ex} className="w-[52px] h-[52px] rounded-xl shadow-sm" />
                             <button
                                 onClick={(e) => { e.stopPropagation(); uploadClick(ex); }}
-                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_4px_10px_rgba(10,132,255,0.4)] text-white tap-highlight"
+                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_4px_10px_rgba(10,132,255,0.4)] text-[#ffffff] tap-highlight"
                             >
                                 <ImagePlus size={14} />
                             </button>
