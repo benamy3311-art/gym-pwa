@@ -12,8 +12,8 @@ describe('Analytics Domain Calculations', () => {
     ];
 
     const mockEntries: WorkoutExerciseEntry[] = [
-        { id: 'e1', sessionId: 's1', exerciseId: 'ex1', order: 0, notes: '', restSeconds: 0 },
-        { id: 'e2', sessionId: 's2', exerciseId: 'ex1', order: 0, notes: '', restSeconds: 0 }
+        { id: 'e1', sessionId: 's1', exerciseId: 'ex1', order: 0 },
+        { id: 'e2', sessionId: 's2', exerciseId: 'ex1', order: 0 }
     ];
 
     const mockSets: SetEntry[] = [
