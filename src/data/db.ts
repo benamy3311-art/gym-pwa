@@ -34,7 +34,7 @@ export class GymDatabase extends Dexie {
         // v2 Schema - Add media table and indices
         this.version(2).stores({
             media: 'id, type, createdAt'
-        }).upgrade(tx => {
+        }).upgrade(_tx => {
             // In Dexie, structural changes to existing records are usually not strictly required
             // unless we want to initialize new fields. We'll leave `imageType` etc. optional
             // so we don't need a heavy data migration map here, they'll just resolve to undefined.

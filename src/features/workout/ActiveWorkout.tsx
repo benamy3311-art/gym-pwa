@@ -7,14 +7,14 @@ import { Exercise } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
-import { Play, Plus, Trash2, Check, Clock, Search, Undo2, Timer } from 'lucide-react';
+import { Plus, Trash2, Check, Clock, Search, Undo2, Timer } from 'lucide-react';
 
 export default function ActiveWorkout() {
     const navigate = useNavigate();
     const {
         activeSession, entries, setsByEntry, previousSetsByExercise, lastDoneSet,
         finishWorkout, cancelWorkout,
-        addExercise, addSet, updateSet, toggleSetDone, removeSet, removeExercise,
+        addExercise, addSet, updateSet, toggleSetDone, removeExercise,
         loadPreviousSets, undoLastSet
     } = useWorkoutStore();
     const { startRest } = useRestStore();

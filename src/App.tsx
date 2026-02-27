@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './features/home/Home';
+import Home from './features/start/Home';
 import Templates from './features/templates/Templates';
 import ActiveWorkout from './features/workout/ActiveWorkout';
 import History from './features/history/History';
@@ -13,6 +13,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
+                    <Route path="workout" element={<ActiveWorkout />} />
                     <Route path="templates" element={<Templates />} />
                     <Route path="exercises" element={<Exercises />} />
                     <Route path="history" element={<History />} />

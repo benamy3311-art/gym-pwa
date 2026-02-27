@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateBackupSchema, BackupData } from '../utils/backup';
+import { validateBackupSchema } from '../utils/backup';
 
 describe('Data Backup Validation', () => {
     it('should invalidate incorrect schemas', () => {

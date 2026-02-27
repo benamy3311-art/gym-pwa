@@ -43,7 +43,7 @@ export async function importData(json: string): Promise<void> {
     }
 
     // Use Dexie transaction to ensure atomic rollback if anything fails
-    await db.transaction('rw', db.exercises, db.templates, db.workoutSessions, db.workoutExerciseEntries, db.setEntries, db.prs, async () => {
+    await db.transaction('rw', [db.exercises, db.templates, db.workoutSessions, db.workoutExerciseEntries, db.setEntries, db.prs], async () => {
         // We use bulkPut to intentionally overwrite existing IDs with the backup's data.
         // This allows updates without duplicating IDs.
         if (data.exercises.length) await db.exercises.bulkPut(data.exercises);

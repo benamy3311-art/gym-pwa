@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Exercise } from '../../domain/models';
-import { MediaRepo } from '../../data/mediaRepository';
+import { Exercise } from '../domain/models';
+import { MediaRepo } from '../data/mediaRepository';
 import { Dumbbell } from 'lucide-react';
 import { cn } from './GlassCard';
 

@@ -7,8 +7,8 @@ describe('Analytics Domain Calculations', () => {
     const weekMs = 7 * 24 * 60 * 60 * 1000;
 
     const mockSessions: WorkoutSession[] = [
-        { id: 's1', templateId: 't1', startedAt: now - weekMs * 2, endedAt: now - weekMs * 2 + 1000 },
-        { id: 's2', templateId: 't1', startedAt: now - 1000, endedAt: now }
+        { id: 's1', templateId: 't1', name: 'Mock 1', unit: 'kg', startedAt: now - weekMs * 2, endedAt: now - weekMs * 2 + 1000 },
+        { id: 's2', templateId: 't1', name: 'Mock 2', unit: 'kg', startedAt: now - 1000, endedAt: now }
     ];
 
     const mockEntries: WorkoutExerciseEntry[] = [

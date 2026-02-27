@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, List, Activity, Clock, Dumbbell, PieChart } from 'lucide-react';
+import { Home, List, Clock, Dumbbell, PieChart } from 'lucide-react';
 import { useRestStore } from '../features/workout/restStore';
 import { cn } from './GlassCard';
 
