@@ -6,7 +6,7 @@ import { Exercise } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
-import { ArrowLeft, Plus, Trash2, Search, Dumbbell } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Search } from 'lucide-react';
 import { ExerciseImage } from '../../ui/ExerciseImage';
 
 export function TemplateEdit() {

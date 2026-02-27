@@ -90,7 +90,7 @@ export function RestTimerOverlay() {
 
             <div className="flex items-center gap-4 animate-in slide-in-from-bottom-8 fade-in duration-500 delay-100">
                 <GlassButton
-                    variant="base"
+                    variant="ghost"
                     className="w-20 h-20 rounded-full flex flex-col items-center justify-center gap-1 hover:bg-white/10"
                     onClick={() => extend(-15000)}
                 >
@@ -108,7 +108,7 @@ export function RestTimerOverlay() {
                 </GlassButton>
 
                 <GlassButton
-                    variant="base"
+                    variant="ghost"
                     className="w-20 h-20 rounded-full flex flex-col items-center justify-center gap-1 hover:bg-white/10"
                     onClick={() => extend(30000)}
                 >
