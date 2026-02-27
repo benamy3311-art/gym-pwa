@@ -31,7 +31,7 @@ export default function Layout() {
             </main>
 
             {/* Liquid Glass Bottom Tab Bar */}
-            <nav className="fixed bottom-0 left-0 right-0 bg-glass-base border-t border-glass-border/50 backdrop-blur-xl pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b md:bg-glass-base shadow-glass-sm pb-1">
+            <nav className="fixed bottom-0 left-0 right-0 bg-[color:var(--glass-base)] border-t border-[color:var(--glass-border)] backdrop-blur-2xl pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b [box-shadow:var(--shadow-md)] pt-1 pb-2 md:pb-1">
                 <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8 px-2 pt-2">
                     <NavItem to="/" icon={<Home size={22} />} label="Start" />
                     <NavItem to="/templates" icon={<List size={22} />} label="Routines" />
@@ -49,12 +49,12 @@ function NavItem({ to, icon, label }: { to: string, icon: React.ReactNode, label
         <NavLink
             to={to}
             className={({ isActive }) => cn(
-                "flex flex-col items-center gap-1 p-2 transition-all duration-300 w-16",
-                isActive ? "text-accent" : "text-secondary hover:text-primary"
+                "flex flex-col items-center gap-1 p-2 transition-all duration-200 w-16 tap-highlight",
+                isActive ? "text-[color:var(--accent)]" : "text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]"
             )}
         >
             {icon}
-            <span className="text-[10px] font-medium hidden md:block mt-1">{label}</span>
+            <span className="ios-caption mt-1 font-medium">{label}</span>
         </NavLink>
     );
 }

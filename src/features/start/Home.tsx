@@ -34,8 +34,8 @@ export default function Home() {
                     <Play size={44} className="text-accent ml-2" />
                 </div>
                 <div className="text-center mt-4">
-                    <h2 className="text-2xl font-bold tracking-tight text-primary mb-1">Workout in Progress</h2>
-                    <p className="text-secondary text-lg font-medium">{activeSession.name}</p>
+                    <h2 className="ios-h2 mb-1">Workout in Progress</h2>
+                    <p className="ios-body text-[color:var(--text-secondary)]">{activeSession.name}</p>
                 </div>
                 <GlassButton variant="primary" size="lg" onClick={() => navigate('/workout')} className="w-full max-w-xs py-4 mt-6">
                     Resume Workout
@@ -47,8 +47,8 @@ export default function Home() {
     return (
         <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <header className="mb-2 mt-4 px-1">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-primary">Ready to lift?</h1>
-                <p className="text-secondary text-lg font-medium">Start a new session or choose a routine</p>
+                <h1 className="ios-title mb-2">Ready to lift?</h1>
+                <p className="ios-body text-[color:var(--text-secondary)]">Start a new session or choose a routine</p>
             </header>
 
             <GlassButton variant="primary" size="lg" onClick={handleStartEmpty} className="w-full py-5 text-lg shadow-glass-sm mx-1">
@@ -57,7 +57,7 @@ export default function Home() {
 
             <div className="mt-6 px-1">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-primary tracking-tight">My Routines</h2>
+                    <h2 className="ios-h2">My Routines</h2>
                     <GlassButton size="sm" onClick={() => navigate('/templates')} className="text-sm px-3 rounded-full">
                         <Plus size={16} /> New
                     </GlassButton>
@@ -79,8 +79,8 @@ export default function Home() {
                                 onClick={() => handleStartTemplate(t)}
                             >
                                 <div>
-                                    <h3 className="font-semibold text-lg text-primary tracking-tight">{t.name}</h3>
-                                    <p className="text-[13px] text-secondary mt-1 font-medium">{t.exerciseIds.length} exercises</p>
+                                    <h3 className="ios-h3">{t.name}</h3>
+                                    <p className="ios-subhead text-[color:var(--text-secondary)] mt-1">{t.exerciseIds.length} exercises</p>
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center group-hover:bg-accent/20 transition-colors shadow-inner-dark">
                                     <Play size={18} className="text-tertiary group-hover:text-accent ml-0.5 transition-colors" />

@@ -37,27 +37,25 @@ export default function Analytics() {
     return (
         <div className="flex flex-col h-full animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
             <header className="mb-6 mt-4 px-1">
-                <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-1">
-                    Analytics
-                </h1>
-                <p className="text-secondary text-lg font-medium">Insights and progress</p>
+                <h1 className="ios-title mb-1">Analytics</h1>
+                <p className="ios-body text-[color:var(--text-secondary)]">Insights and progress</p>
             </header>
 
             {summary && (
                 <section className="mb-8 px-1">
-                    <h2 className="text-[13px] font-bold text-tertiary mb-3 tracking-widest uppercase ml-1">Last 7 Days</h2>
+                    <h2 className="ios-caption font-bold text-[color:var(--text-tertiary)] mb-3 tracking-widest uppercase ml-1">Last 7 Days</h2>
                     <div className="grid grid-cols-3 gap-3">
                         <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center border-t border-t-blue-500/20">
-                            <p className="text-3xl font-extrabold tracking-tighter text-blue-400">{summary.totalSessions}</p>
-                            <p className="text-[10px] md:text-xs font-semibold text-secondary uppercase mt-1 tracking-wider">Sessions</p>
+                            <p className="ios-title text-blue-400">{summary.totalSessions}</p>
+                            <p className="ios-caption font-semibold text-[color:var(--text-secondary)] uppercase mt-1 tracking-wider">Sessions</p>
                         </GlassCard>
                         <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center border-t border-t-green-500/20">
-                            <p className="text-3xl font-extrabold tracking-tighter text-green-400">{summary.totalVolume}</p>
-                            <p className="text-[10px] md:text-xs font-semibold text-secondary uppercase mt-1 tracking-wider">Volume <span className="text-[9px] opacity-70">(kg)</span></p>
+                            <p className="ios-title text-green-400">{summary.totalVolume}</p>
+                            <p className="ios-caption font-semibold text-[color:var(--text-secondary)] uppercase mt-1 tracking-wider">Volume <span className="opacity-70">(kg)</span></p>
                         </GlassCard>
                         <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center border-t border-t-amber-500/20">
-                            <p className="text-3xl font-extrabold tracking-tighter text-amber-500">{summary.totalPRs}</p>
-                            <p className="text-[10px] md:text-xs font-semibold text-secondary uppercase mt-1 tracking-wider">Records</p>
+                            <p className="ios-title text-amber-500">{summary.totalPRs}</p>
+                            <p className="ios-caption font-semibold text-[color:var(--text-secondary)] uppercase mt-1 tracking-wider">Records</p>
                         </GlassCard>
                     </div>
                 </section>
@@ -65,9 +63,9 @@ export default function Analytics() {
 
             <section className="flex-1 pb-10 px-1">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3 ml-1">
-                    <h2 className="text-[13px] font-bold text-tertiary tracking-widest uppercase">Exercise Progress</h2>
+                    <h2 className="ios-caption font-bold text-[color:var(--text-tertiary)] tracking-widest uppercase">Exercise Progress</h2>
                     <select
-                        className="bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-sm font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-accent w-full md:w-[200px] shadow-inner-dark appearance-none"
+                        className="bg-[color:var(--glass-inset)] border border-[color:var(--glass-border)] rounded-xl px-3 py-2 ios-subhead font-semibold text-[color:var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] w-full md:w-[200px] shadow-inner appearance-none"
                         value={selectedExercise}
                         onChange={e => setSelectedExercise(e.target.value)}
                         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 10px center', backgroundRepeat: 'no-repeat', backgroundSize: '16px' }}

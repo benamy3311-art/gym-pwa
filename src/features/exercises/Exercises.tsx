@@ -68,8 +68,8 @@ export default function Exercises() {
             <header className="flex flex-col gap-3 mb-1 mt-4 px-1">
                 <div className="flex items-end justify-between">
                     <div>
-                        <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-1">Exercises</h1>
-                        <p className="text-secondary font-medium">Manage your library</p>
+                        <h1 className="ios-title mb-1">Exercises</h1>
+                        <p className="ios-body text-[color:var(--text-secondary)]">Manage your library</p>
                     </div>
                     <GlassButton variant="primary" size="sm" onClick={handleCreate} className="rounded-full w-10 h-10 p-0 mb-1">
                         <Plus size={20} />
@@ -82,7 +82,7 @@ export default function Exercises() {
                         placeholder="Search exercises..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="pl-12 h-12 rounded-2xl bg-black/10 border-black/10 text-[15px]"
+                        className="pl-10"
                     />
                 </div>
             </header>
@@ -108,8 +108,8 @@ export default function Exercises() {
                             </button>
                         </div>
                         <div className="flex-1">
-                            <p className="font-bold text-[17px] text-primary tracking-tight">{ex.name}</p>
-                            {ex.bodyPart && <p className="text-[13px] font-medium text-secondary mt-0.5">{ex.bodyPart}</p>}
+                            <p className="ios-body font-semibold">{ex.name}</p>
+                            {ex.bodyPart && <p className="ios-subhead text-[color:var(--text-secondary)] mt-0.5">{ex.bodyPart}</p>}
                         </div>
                     </GlassCard>
                 ))}
