@@ -4,32 +4,30 @@
  * Controls base colors and highlight glow
  */
 
-@layer components {
-    .anatomy-svg {
-        overflow: visible;
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-    }
+.anatomy-svg {
+    overflow: visible;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
 
-    .anatomy-path {
-        fill: var(--anatomy-base-fill);
-        stroke: var(--anatomy-base-stroke);
-        stroke-width: 1.5;
-        stroke-linejoin: round;
-        transition: fill 0.3s ease-out, filter 0.3s ease-out;
-    }
+.anatomy-path {
+    fill: var(--anatomy-base-fill);
+    stroke: var(--anatomy-base-stroke);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    transition: fill 0.3s ease-out, filter 0.3s ease-out;
+}
 
-    .anatomy-path.highlight {
-        fill: var(--accent);
-        stroke: var(--accent-stroke, transparent);
-        /* Subdued glow effect so it blends with Liquid Glass */
-        filter: drop-shadow(0 0 8px var(--accent-glow));
-        z-index: 10;
-    }
+.anatomy-path.highlight {
+    fill: var(--accent);
+    stroke: var(--accent-stroke, transparent);
+    /* Subdued glow effect so it blends with Liquid Glass */
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+    z-index: 10;
+}
 
-    .anatomy-path-neutral {
-        fill: var(--anatomy-neutral-fill);
-        stroke: var(--anatomy-base-stroke);
-    }
+.anatomy-path-neutral {
+    fill: var(--anatomy-neutral-fill);
+    stroke: var(--anatomy-base-stroke);
 }
 
 :root {
