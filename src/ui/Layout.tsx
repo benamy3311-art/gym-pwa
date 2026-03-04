@@ -13,7 +13,7 @@ export default function Layout() {
             </main>
 
             {/* Liquid Glass Bottom Tab Bar */}
-            <nav className="fixed bottom-0 left-0 right-0 bg-[color:var(--glass-base)] border-t border-[color:var(--glass-border)] backdrop-blur-2xl pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b [box-shadow:var(--shadow-md)] pt-1 pb-2 md:pb-1">
+            <nav className="fixed bottom-0 left-0 right-0 bg-[#1C1C1E] border-t border-[#2C2C2E] pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b pt-1 pb-2 md:pb-1">
                 <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8 px-2 pt-2">
                     <NavItem to="/" icon={<Home size={22} />} label="Start" />
                     <NavItem to="/templates" icon={<List size={22} />} label="Routines" />

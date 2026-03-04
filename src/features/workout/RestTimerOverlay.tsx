@@ -30,7 +30,7 @@ export function RestTimerOverlay() {
 
     return (
         <div
-            className={`fixed inset-0 z-[100] flex flex-col items-center justify-center transition-all duration-300 ease-out bg-black/60 backdrop-blur-3xl ${isActive ? 'opacity-100' : 'opacity-0'}`}
+            className={`fixed inset-0 z-[100] flex flex-col items-center justify-center transition-all duration-300 ease-out bg-black/85 ${isActive ? 'opacity-100' : 'opacity-0'}`}
         >
             <div className="absolute top-8 right-8">
                 <button
@@ -72,7 +72,7 @@ export function RestTimerOverlay() {
                         strokeDasharray={circumference}
                         strokeDashoffset={strokeDashoffset}
                         className="transition-all duration-250 ease-linear"
-                        style={{ filter: 'drop-shadow(0 0 12px rgba(10, 132, 255, 0.4))' }}
+                        style={{  }}
                     />
                 </svg>
 
@@ -100,7 +100,7 @@ export function RestTimerOverlay() {
 
                 <GlassButton
                     variant="primary"
-                    className="w-24 h-24 rounded-[2rem] flex flex-col items-center justify-center gap-2 shadow-[0_0_30px_rgba(10,132,255,0.3)] bg-[color:var(--accent)] hover:bg-[color:var(--accent-hover)]"
+                    className="w-24 h-24 rounded-[2rem] flex flex-col items-center justify-center gap-2 bg-[color:var(--accent)] hover:bg-[color:var(--accent-hover)]"
                     onClick={skip}
                 >
                     <FastForward size={32} fill="currentColor" />

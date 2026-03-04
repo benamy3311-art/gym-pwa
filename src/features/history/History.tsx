@@ -55,7 +55,7 @@ export default function History() {
 
             <div className="flex flex-col gap-3 px-1">
                 {sessions.map(s => (
-                    <GlassCard key={s.id} variant="base" className="flex flex-col gap-3 group hover:bg-white/10 transition-colors cursor-pointer tap-highlight">
+                    <GlassCard key={s.id} variant="base" className="flex flex-col gap-3 group hover:bg-[#3A3A3C] transition-colors cursor-pointer tap-highlight">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h3 className="ios-h3 group-hover:text-[color:var(--accent)] transition-colors text-[color:var(--text-primary)]">{s.name}</h3>
@@ -66,13 +66,13 @@ export default function History() {
                                 </p>
                             </div>
                             {s.prCount > 0 && (
-                                <div className="bg-amber-500/20 text-amber-500 px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-[0_0_15px_rgba(245,158,11,0.15)] border border-amber-500/30">
+                                <div className="bg-amber-500/20 text-amber-500 px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5">
                                     <Medal size={14} /> {s.prCount} PR{s.prCount > 1 && 's'}
                                 </div>
                             )}
                         </div>
 
-                        <div className="flex flex-wrap gap-5 mt-1 pt-3 border-t border-[color:var(--glass-border)]">
+                        <div className="flex flex-wrap gap-5 mt-1 pt-3 border-t border-[#3A3A3C]">
                             <div className="flex items-center gap-2 ios-subhead font-semibold text-[color:var(--text-primary)] opacity-90">
                                 <Clock size={16} className="text-[color:var(--accent)]" />
                                 {formatDuration(s.startedAt, s.endedAt)}
@@ -86,7 +86,7 @@ export default function History() {
                 ))}
 
                 {sessions.length === 0 && (
-                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-glass-inset rounded-3xl border border-glass-border/30 mt-2">
+                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 mt-2">
                         <HistoryIcon size={48} className="text-tertiary mb-4 opacity-50" />
                         <p className="font-medium text-primary text-lg tracking-tight">No history found.</p>
                         <p className="text-[15px] text-secondary mt-1 max-w-[200px]">Complete your first workout and it will appear here.</p>

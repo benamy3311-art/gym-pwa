@@ -97,12 +97,12 @@ export default function Exercises() {
                 />
 
                 {filtered.map(ex => (
-                    <GlassCard key={ex.id} variant="elevated" className="flex items-center gap-4 py-3 px-4 group tap-highlight hover:bg-white/10 transition-colors cursor-pointer">
-                        <div className="relative shrink-0 flex items-center justify-center bg-black/5 rounded-xl border border-glass-border/30 w-[52px] h-[52px]">
+                    <GlassCard key={ex.id} variant="elevated" className="flex items-center gap-4 py-3 px-4 group tap-highlight hover:bg-[#3A3A3C] transition-colors cursor-pointer">
+                        <div className="relative shrink-0 flex items-center justify-center bg-[#1C1C1E] rounded-xl w-[52px] h-[52px]">
                             <BodyPartIcon bodyPart={ex.bodyPart} variant="front" size="sm" className="opacity-90" />
                             <button
                                 onClick={(e) => { e.stopPropagation(); uploadClick(ex); }}
-                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_4px_10px_rgba(10,132,255,0.4)] text-[#ffffff] tap-highlight"
+                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#ffffff] tap-highlight"
                             >
                                 <ImagePlus size={14} />
                             </button>
@@ -115,7 +115,7 @@ export default function Exercises() {
                 ))}
 
                 {filtered.length === 0 && (
-                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-glass-inset rounded-3xl border border-glass-border/30 mt-2">
+                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 mt-2">
                         <Dumbbell size={48} className="text-tertiary mb-4 opacity-50" />
                         <p className="font-medium text-primary text-lg tracking-tight">No exercises found.</p>
                         <p className="text-[15px] text-secondary mt-1 max-w-[200px]">Try adjusting your search or create a new one.</p>

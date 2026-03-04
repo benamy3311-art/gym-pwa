@@ -37,7 +37,7 @@ export default function Home() {
     if (activeSession) {
         return (
             <div className="flex flex-col items-center justify-center flex-1 gap-6 mt-20 animate-in fade-in zoom-in-95 duration-500">
-                <div className="w-28 h-28 bg-accent/20 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_40px_rgba(10,132,255,0.4)]">
+                <div className="w-28 h-28 bg-[#FF3B30]/15 rounded-full flex items-center justify-center animate-pulse">
                     <Play size={44} className="text-accent ml-2" />
                 </div>
                 <div className="text-center mt-4">
@@ -72,10 +72,10 @@ export default function Home() {
 
                 <div className="flex flex-col gap-3 pb-8">
                     {templates.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center text-secondary text-center py-12 px-6 bg-glass-inset rounded-3xl border border-glass-border/30">
-                            <ListVideo size={40} className="text-tertiary mb-3 opacity-50" />
-                            <p className="font-medium text-[15px]">No routines yet.</p>
-                            <p className="text-sm text-tertiary mt-1">Create one to get started quickly.</p>
+                        <div className="flex flex-col items-center justify-center text-center py-12 px-6">
+                            <ListVideo size={36} className="text-[color:var(--text-tertiary)] mb-3" />
+                            <p className="ios-body font-medium text-[color:var(--text-secondary)]">No routines yet</p>
+                            <p className="ios-subhead text-[color:var(--text-tertiary)] mt-1">Create one to get started quickly.</p>
                         </div>
                     ) : (
                         templates.map(t => (
@@ -89,8 +89,8 @@ export default function Home() {
                                     <h3 className="ios-h3">{t.name}</h3>
                                     <p className="ios-subhead text-[color:var(--text-secondary)] mt-1">{t.exerciseIds.length} exercises</p>
                                 </div>
-                                <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center group-hover:bg-accent/20 transition-colors shadow-inner-dark">
-                                    <Play size={18} className="text-tertiary group-hover:text-accent ml-0.5 transition-colors" />
+                                <div className="w-10 h-10 rounded-full bg-[#3A3A3C] flex items-center justify-center group-hover:bg-[#FF3B30]/15 transition-colors">
+                                    <Play size={18} className="text-[color:var(--text-secondary)] group-hover:text-[color:var(--accent)] ml-0.5 transition-colors" />
                                 </div>
                             </GlassCard>
                         ))

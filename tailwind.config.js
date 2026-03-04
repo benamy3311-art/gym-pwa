@@ -29,8 +29,8 @@ export default {
             boxShadow: {
                 'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
                 'glass-sm': '0 4px 16px 0 rgba(0, 0, 0, 0.2)',
-                'inner-light': 'inset 0 1px 0 0 var(--glass-highlight)',
-                'inner-dark': 'inset 0 2px 4px 0 rgba(0,0,0,0.5)',
+                'inner-light': 'none',
+                'inner-dark': 'none',
             }
         },
     },

@@ -91,7 +91,7 @@ export default function Templates() {
                 ))}
 
                 {templates.length === 0 && (
-                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-glass-inset rounded-3xl border border-glass-border/30 mt-4">
+                    <div className="flex flex-col items-center justify-center text-center py-16 px-6 mt-4">
                         <LayoutList size={48} className="text-tertiary mb-4 opacity-50" />
                         <p className="font-medium text-[color:var(--text-primary)] text-lg tracking-tight">No routines found.</p>
                         <p className="text-[15px] text-[color:var(--text-secondary)] mt-1 max-w-[200px]">Create a new routine to save your favourite exercises.</p>

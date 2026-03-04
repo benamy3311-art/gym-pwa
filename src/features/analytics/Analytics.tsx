@@ -45,16 +45,16 @@ export default function Analytics() {
                 <section className="mb-8 px-1">
                     <h2 className="ios-caption font-bold text-[color:var(--text-tertiary)] mb-3 tracking-widest uppercase ml-1">Last 7 Days</h2>
                     <div className="grid grid-cols-3 gap-3">
-                        <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center border-t border-t-blue-500/20">
-                            <p className="ios-title text-blue-400">{summary.totalSessions}</p>
+                        <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center">
+                            <p className="ios-title text-[#0A84FF]">{summary.totalSessions}</p>
                             <p className="ios-caption font-semibold text-[color:var(--text-secondary)] uppercase mt-1 tracking-wider">Sessions</p>
                         </GlassCard>
-                        <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center border-t border-t-green-500/20">
-                            <p className="ios-title text-green-400">{summary.totalVolume}</p>
+                        <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center">
+                            <p className="ios-title text-[#30D158]">{summary.totalVolume}</p>
                             <p className="ios-caption font-semibold text-[color:var(--text-secondary)] uppercase mt-1 tracking-wider">Volume <span className="opacity-70">(kg)</span></p>
                         </GlassCard>
-                        <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center border-t border-t-amber-500/20">
-                            <p className="ios-title text-amber-500">{summary.totalPRs}</p>
+                        <GlassCard variant="elevated" className="p-4 text-center flex flex-col justify-center">
+                            <p className="ios-title text-[#FF9F0A]">{summary.totalPRs}</p>
                             <p className="ios-caption font-semibold text-[color:var(--text-secondary)] uppercase mt-1 tracking-wider">Records</p>
                         </GlassCard>
                     </div>
@@ -65,7 +65,7 @@ export default function Analytics() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3 ml-1">
                     <h2 className="ios-caption font-bold text-[color:var(--text-tertiary)] tracking-widest uppercase">Exercise Progress</h2>
                     <select
-                        className="bg-[color:var(--glass-inset)] border border-[color:var(--glass-border)] rounded-xl px-3 py-2 ios-subhead font-semibold text-[color:var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] w-full md:w-[200px] shadow-inner appearance-none"
+                        className="bg-[#2C2C2E] rounded-xl px-3 py-2 ios-subhead font-semibold text-[color:var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)] w-full md:w-[200px] appearance-none"
                         value={selectedExercise}
                         onChange={e => setSelectedExercise(e.target.value)}
                         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: 'right 10px center', backgroundRepeat: 'no-repeat', backgroundSize: '16px' }}
@@ -87,8 +87,8 @@ export default function Analytics() {
                                 <LineChart data={progressData}>
                                     <XAxis dataKey="date" stroke="rgba(255,255,255,0.3)" fontSize={10} tickMargin={10} tickLine={false} axisLine={false} />
                                     <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} tickMargin={10} tickLine={false} axisLine={false} />
-                                    <Tooltip contentStyle={{ backgroundColor: 'rgba(20,20,20,0.85)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} itemStyle={{ color: '#0a84ff', fontWeight: 600 }} />
-                                    <Line type="monotone" dataKey="maxWeight" stroke="#0a84ff" strokeWidth={3} dot={{ r: 4, fill: '#0a84ff', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#fff', stroke: '#0a84ff', strokeWidth: 2 }} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#2C2C2E', border: '1px solid #3A3A3C', borderRadius: '12px', color: '#fff' }} itemStyle={{ color: '#0A84FF', fontWeight: 600 }} />
+                                    <Line type="monotone" dataKey="maxWeight" stroke="#0A84FF" strokeWidth={3} dot={{ r: 4, fill: '#0A84FF', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#fff', stroke: '#0A84FF', strokeWidth: 2 }} />
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
@@ -106,8 +106,8 @@ export default function Analytics() {
                                 <BarChart data={progressData}>
                                     <XAxis dataKey="date" stroke="rgba(255,255,255,0.3)" fontSize={10} tickMargin={10} tickLine={false} axisLine={false} />
                                     <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} tickMargin={10} tickLine={false} axisLine={false} />
-                                    <Tooltip contentStyle={{ backgroundColor: 'rgba(20,20,20,0.85)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} itemStyle={{ color: '#32d74b', fontWeight: 600 }} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
-                                    <Bar dataKey="totalVolume" fill="#32d74b" radius={[4, 4, 0, 0]} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#2C2C2E', border: '1px solid #3A3A3C', borderRadius: '12px', color: '#fff' }} itemStyle={{ color: '#30D158', fontWeight: 600 }} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+                                    <Bar dataKey="totalVolume" fill="#30D158" radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
