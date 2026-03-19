@@ -146,7 +146,6 @@ export default function ActiveWorkout() {
                                                 placeholder="0"
                                                 containerClassName="mx-auto w-full max-w-[80px]"
                                                 className="h-10 text-center font-bold text-base p-0 bg-[#1C1C1E] rounded-full tabular-nums focus:bg-[#2C2C2E] transition-colors"
-                                                disabled={set.isDone}
                                             />
 
                                             <GlassInput
@@ -157,7 +156,6 @@ export default function ActiveWorkout() {
                                                 placeholder="0"
                                                 containerClassName="mx-auto w-full max-w-[80px]"
                                                 className="h-10 text-center font-bold text-base p-0 bg-[#1C1C1E] rounded-full tabular-nums focus:bg-[#2C2C2E] transition-colors"
-                                                disabled={set.isDone}
                                             />
 
                                             <button
