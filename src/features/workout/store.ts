@@ -76,11 +76,13 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
         const order = entries.length;
         const entry = await WorkoutRepo.addExerciseToSession(activeSession.id, exerciseId, order);
 
-        const firstSet = await WorkoutRepo.addSet(entry.id, 1, 0, 0);
+        const set1 = await WorkoutRepo.addSet(entry.id, 1, 0, 0);
+        const set2 = await WorkoutRepo.addSet(entry.id, 2, 0, 0);
+        const set3 = await WorkoutRepo.addSet(entry.id, 3, 0, 0);
 
         set((state) => ({
             entries: [...state.entries, entry],
-            setsByEntry: { ...state.setsByEntry, [entry.id]: [firstSet] }
+            setsByEntry: { ...state.setsByEntry, [entry.id]: [set1, set2, set3] }
         }));
     },
 

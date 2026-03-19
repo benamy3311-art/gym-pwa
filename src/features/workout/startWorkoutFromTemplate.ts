@@ -50,16 +50,13 @@ export async function startWorkoutFromTemplate(templateId: string): Promise<stri
 
         await db.workoutExerciseEntries.bulkAdd(entries);
 
-        // 3. Create initial empty set for each entry to follow current app logic
-        const initialSets: SetEntry[] = entries.map(entry => ({
-            id: generateId(),
-            entryId: entry.id,
-            setNumber: 1,
-            weight: 0,
-            reps: 0,
-            isDone: false,
-            createdAt: Date.now()
-        }));
+        // 3. Create 3 initial empty sets for each entry to follow current app logic
+        const now = Date.now();
+        const initialSets: SetEntry[] = entries.flatMap(entry => [
+            { id: generateId(), entryId: entry.id, setNumber: 1, weight: 0, reps: 0, isDone: false, createdAt: now },
+            { id: generateId(), entryId: entry.id, setNumber: 2, weight: 0, reps: 0, isDone: false, createdAt: now },
+            { id: generateId(), entryId: entry.id, setNumber: 3, weight: 0, reps: 0, isDone: false, createdAt: now },
+        ]);
 
         await db.setEntries.bulkAdd(initialSets);
 
