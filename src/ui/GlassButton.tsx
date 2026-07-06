@@ -12,7 +12,7 @@ export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>
             primary: 'bg-[color:var(--accent)] hover:bg-[color:var(--accent-hover)] text-white',
             secondary: 'bg-[color:var(--glass-elevated)] hover:bg-[#48484A] text-[color:var(--text-primary)]',
             danger: 'bg-[#3A0A08] hover:bg-[#4A1210] text-[#FF453A]',
-            ghost: 'bg-transparent hover:bg-[#2C2C2E] text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]',
+            ghost: 'bg-transparent hover:bg-glass-base text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]',
         };
 
         const sizes = {

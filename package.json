@@ -11,9 +11,12 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.0",
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.7",
+    "firebase": "^12.15.0",
     "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,6 +39,7 @@
     "jsdom": "^24.0.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-pwa": "^0.19.6",

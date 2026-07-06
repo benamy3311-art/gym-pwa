@@ -42,14 +42,14 @@ export function RestTimerOverlay() {
             </div>
 
             {source && (
-                <div className="text-center mb-8 animate-in slide-in-from-bottom-4 fade-in duration-500">
+                <div className="text-center mb-8 animate-in slide-in-from-bottom-4 fade-in duration-200">
                     <p className="text-accent ios-subhead uppercase tracking-widest font-bold mb-2">Resting</p>
-                    <h2 className="text-3xl font-bold text-white tracking-tight">{source.exerciseName}</h2>
+                    <h2 className="ios-h1 text-white">{source.exerciseName}</h2>
                     <p className="ios-body text-white/70 mt-1">Set {source.setNumber} Completed</p>
                 </div>
             )}
 
-            <div className="relative flex items-center justify-center mb-12 animate-in zoom-in-95 duration-500 ease-spring">
+            <div className="relative flex items-center justify-center mb-12 animate-in zoom-in-95 duration-200 ease-spring">
                 <svg className="w-80 h-80 -rotate-90 transform" viewBox="0 0 280 280">
                     {/* Background Track */}
                     <circle
@@ -88,7 +88,7 @@ export function RestTimerOverlay() {
                 </div>
             </div>
 
-            <div className="flex items-center gap-4 animate-in slide-in-from-bottom-8 fade-in duration-500 delay-100">
+            <div className="flex items-center gap-4 animate-in slide-in-from-bottom-8 fade-in duration-200 delay-100">
                 <GlassButton
                     variant="ghost"
                     className="w-20 h-20 rounded-full flex flex-col items-center justify-center gap-1 hover:bg-white/10"
@@ -117,7 +117,7 @@ export function RestTimerOverlay() {
                 </GlassButton>
             </div>
 
-            <div className="flex gap-3 mt-10 animate-in slide-in-from-bottom-6 fade-in duration-500 delay-200">
+            <div className="flex gap-3 mt-10 animate-in slide-in-from-bottom-6 fade-in duration-200 delay-200">
                 {[60, 90, 120].map(sec => (
                     <button
                         key={sec}

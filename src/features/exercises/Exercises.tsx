@@ -64,7 +64,7 @@ export default function Exercises() {
     const filtered = exercises.filter(e => e.name.toLowerCase().includes(search.toLowerCase()));
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-200 pb-8">
             <header className="flex flex-col gap-3 mb-1 mt-4 px-1">
                 <div className="flex items-end justify-between">
                     <div>
@@ -97,12 +97,12 @@ export default function Exercises() {
                 />
 
                 {filtered.map(ex => (
-                    <GlassCard key={ex.id} variant="elevated" className="flex items-center gap-4 py-3 px-4 group tap-highlight hover:bg-[#3A3A3C] transition-colors cursor-pointer">
-                        <div className="relative shrink-0 flex items-center justify-center bg-[#1C1C1E] rounded-xl w-[52px] h-[52px]">
+                    <GlassCard key={ex.id} variant="elevated" className="flex items-center gap-4 py-3 px-4 group tap-highlight hover:bg-glass-elevated transition-colors cursor-pointer">
+                        <div className="relative shrink-0 flex items-center justify-center bg-glass-inset rounded-xl w-[52px] h-[52px]">
                             <BodyPartIcon bodyPart={ex.bodyPart} variant="front" size="sm" className="opacity-90" />
                             <button
                                 onClick={(e) => { e.stopPropagation(); uploadClick(ex); }}
-                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#ffffff] tap-highlight"
+                                className="absolute -bottom-1 -right-1 bg-accent rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-white tap-highlight"
                             >
                                 <ImagePlus size={14} />
                             </button>

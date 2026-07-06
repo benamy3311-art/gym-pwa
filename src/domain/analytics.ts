@@ -83,3 +83,58 @@ export function computeWeeklySummary(
         totalPRs: recentPRs.length
     };
 }
+
+export interface HomeStats {
+    /** Consecutive calendar days (ending today or yesterday) with >= 1 completed session. */
+    streakDays: number;
+    /** Total volume (weight * reps of done sets) across completed sessions in the last 7 days. */
+    weeklyVolume: number;
+}
+
+/** Local-timezone calendar-day key for a timestamp. */
+function dayKey(timestamp: number): string {
+    const d = new Date(timestamp);
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+export function computeHomeStats(
+    sessions: WorkoutSession[],
+    entries: WorkoutExerciseEntry[],
+    sets: SetEntry[],
+    now: number = Date.now()
+): HomeStats {
+    // --- Streak: consecutive calendar days with at least one completed session,
+    // walking backward from today (or yesterday, if today has no workout yet).
+    const trainedDays = new Set<string>();
+    for (const s of sessions) {
+        if (s.endedAt) trainedDays.add(dayKey(s.startedAt));
+    }
+
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    let streakDays = 0;
+    let cursor = now;
+    // A streak isn't broken by "today hasn't happened yet".
+    if (!trainedDays.has(dayKey(cursor))) cursor -= DAY_MS;
+    while (trainedDays.has(dayKey(cursor))) {
+        streakDays++;
+        cursor -= DAY_MS;
+    }
+
+    // --- Weekly volume: same window/filters as computeWeeklySummary.
+    const oneWeekAgo = now - 7 * DAY_MS;
+    const recentSessionIds = new Set(
+        sessions.filter(s => s.endedAt && s.endedAt >= oneWeekAgo).map(s => s.id)
+    );
+    const recentEntryIds = new Set(
+        entries.filter(e => recentSessionIds.has(e.sessionId)).map(e => e.id)
+    );
+
+    let weeklyVolume = 0;
+    for (const set of sets) {
+        if (set.isDone && recentEntryIds.has(set.entryId)) {
+            weeklyVolume += set.weight * set.reps;
+        }
+    }
+
+    return { streakDays, weeklyVolume };
+}

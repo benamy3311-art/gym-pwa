@@ -8,29 +8,40 @@ import Exercises from './features/exercises/Exercises';
 import Analytics from './features/analytics/Analytics';
 import Layout from './ui/Layout';
 import { useEffect } from 'react';
-import { useThemeStore } from './store/themeStore';
+import { useAuthStore } from './store/authStore';
+import { auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { syncNow } from './data/cloudSync';
+
+const SYNC_INTERVAL_MS = 2 * 60 * 1000;
 
 function App() {
-    const { theme } = useThemeStore();
+    const { user, setUser } = useAuthStore();
 
     useEffect(() => {
-        const root = document.documentElement;
+        if (!auth) return;
+        return onAuthStateChanged(auth, setUser);
+    }, [setUser]);
 
-        const applyTheme = (t: 'dark' | 'light') => {
-            root.setAttribute('data-theme', t);
+    useEffect(() => {
+        if (!user) return;
+
+        const trySync = () => {
+            if (navigator.onLine) syncNow(user).catch(console.error);
         };
 
-        if (theme === 'system') {
-            const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-            applyTheme(mediaQuery.matches ? 'light' : 'dark');
+        trySync();
+        const interval = setInterval(trySync, SYNC_INTERVAL_MS);
+        document.addEventListener('visibilitychange', trySync);
+        window.addEventListener('online', trySync);
 
-            const listener = (e: MediaQueryListEvent) => applyTheme(e.matches ? 'light' : 'dark');
-            mediaQuery.addEventListener('change', listener);
-            return () => mediaQuery.removeEventListener('change', listener);
-        } else {
-            applyTheme(theme);
-        }
-    }, [theme]);
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', trySync);
+            window.removeEventListener('online', trySync);
+        };
+    }, [user]);
+
     return (
         <BrowserRouter>
             <Routes>

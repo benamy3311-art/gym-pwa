@@ -1,3 +1,5 @@
+import tailwindcssAnimate from 'tailwindcss-animate';
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
@@ -31,8 +33,11 @@ export default {
                 'glass-sm': '0 4px 16px 0 rgba(0, 0, 0, 0.2)',
                 'inner-light': 'none',
                 'inner-dark': 'none',
+            },
+            transitionTimingFunction: {
+                spring: 'cubic-bezier(0.34, 1.2, 0.64, 1)',
             }
         },
     },
-    plugins: [],
+    plugins: [tailwindcssAnimate],
 }

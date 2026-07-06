@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 import { useWorkoutStore } from './store';
 import { useRestStore } from './restStore';
 import { ExerciseRepo } from '../../data/repositories';
-import { Exercise } from '../../domain/models';
+import { Exercise, SetEntry } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
-import { Plus, Trash2, Check, Clock, Search, Undo2, Timer } from 'lucide-react';
+import { Plus, Minus, Trash2, Check, Clock, Search, Undo2, Timer, Trophy } from 'lucide-react';
 import { RestTimerOverlay } from './RestTimerOverlay';
 import { BodyPartIcon } from '../../ui/anatomy/BodyPartIcon';
 
@@ -24,6 +25,44 @@ export default function ActiveWorkout() {
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [showAdd, setShowAdd] = useState(false);
     const [duration, setDuration] = useState('00:00');
+    // Local drafts for weight inputs so partial decimals like "3." aren't
+    // clobbered by the parsed value round-tripping through the store.
+    const [weightDrafts, setWeightDrafts] = useState<Record<string, string>>({});
+    // Transient PR celebration banner (auto-dismisses).
+    const [prToast, setPrToast] = useState<string | null>(null);
+    const prToastTimeout = useRef<number | null>(null);
+
+    useEffect(() => () => {
+        if (prToastTimeout.current) clearTimeout(prToastTimeout.current);
+    }, []);
+
+    // Stepper helpers: commit through the same updateSet path as typing.
+    // Read the freshest set from the store so rapid taps don't hit stale closures.
+    const latestSet = (setId: string, entryId: string): SetEntry | undefined =>
+        useWorkoutStore.getState().setsByEntry[entryId]?.find(s => s.id === setId);
+
+    const stepWeight = (setId: string, entryId: string, delta: number) => {
+        const current = latestSet(setId, entryId);
+        if (!current) return;
+        const draft = weightDrafts[setId];
+        const parsedDraft = draft !== undefined ? parseFloat(draft) : NaN;
+        const base = Number.isFinite(parsedDraft) ? parsedDraft : (current.weight || 0);
+        const next = Math.max(0, Math.round((base + delta) * 100) / 100);
+        // Clear any draft so the committed value is displayed.
+        setWeightDrafts(prev => {
+            if (prev[setId] === undefined) return prev;
+            const copy = { ...prev };
+            delete copy[setId];
+            return copy;
+        });
+        updateSet(setId, entryId, { weight: next });
+    };
+
+    const stepReps = (setId: string, entryId: string, delta: number) => {
+        const current = latestSet(setId, entryId);
+        if (!current) return;
+        updateSet(setId, entryId, { reps: Math.max(0, (current.reps || 0) + delta) });
+    };
 
     useEffect(() => {
         if (!activeSession) {
@@ -70,8 +109,8 @@ export default function ActiveWorkout() {
     };
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24">
-            <header className="flex flex-col gap-2 pt-2 sticky top-0 bg-[#000000] z-20 pb-4 border-b border-[#2C2C2E] mx-[-16px] px-4 md:mx-0 md:px-0">
+        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-200 pb-24">
+            <header className="flex flex-col gap-2 pt-2 sticky top-0 bg-background z-20 pb-4 border-b border-glass-base mx-[-16px] px-4 md:mx-0 md:px-0">
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="ios-h1 flex items-center gap-2">
@@ -95,9 +134,9 @@ export default function ActiveWorkout() {
 
                     return (
                         <GlassCard key={entry.id} variant="elevated" className="flex flex-col gap-4 p-4 md:p-6 mb-2">
-                            <div className="flex justify-between items-center border-b border-[#3A3A3C] pb-3">
+                            <div className="flex justify-between items-center border-b border-glass-elevated pb-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-[#1C1C1E] flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-glass-inset flex items-center justify-center">
                                         <BodyPartIcon bodyPart={ex?.bodyPart} variant="front" size="sm" />
                                     </div>
                                     <h3 className="ios-h3 truncate max-w-[200px]">{ex?.name || 'Unknown Exercise'}</h3>
@@ -111,8 +150,8 @@ export default function ActiveWorkout() {
                             </div>
 
                             {/* Headings */}
-                            <div className="grid grid-cols-[36px_66px_1fr_1fr_36px] gap-2 ios-caption font-bold text-secondary uppercase tracking-tighter px-1 mb-1">
-                                <div className="text-center opacity-70">Set</div>
+                            <div className="grid grid-cols-[18px_44px_1.15fr_1fr_38px] gap-1.5 ios-caption font-bold text-secondary uppercase tracking-tighter mb-1">
+                                <div className="text-center opacity-70">#</div>
                                 <div className="text-center opacity-50">Prev</div>
                                 <div className="text-center opacity-80">{activeSession.unit}</div>
                                 <div className="text-center opacity-80">Reps</div>
@@ -128,35 +167,88 @@ export default function ActiveWorkout() {
                                     return (
                                         <div
                                             key={set.id}
-                                            className={`grid grid-cols-[36px_66px_1fr_1fr_36px] gap-2 items-center transition-all duration-300 ${set.isDone ? 'opacity-50 grayscale-[40%]' : ''}`}
+                                            className={`grid grid-cols-[18px_44px_1.15fr_1fr_38px] gap-1.5 items-center transition-all duration-300 ${set.isDone ? 'opacity-50 grayscale-[40%]' : ''}`}
                                         >
                                             <div className="text-center font-mono text-tertiary text-[11px] font-bold tabular-nums">
                                                 {index + 1}
                                             </div>
 
-                                            <div className="text-center font-mono text-[color:var(--text-secondary)] text-[11px] flex items-center justify-center bg-[#1C1C1E] rounded-full h-10 min-w-0 overflow-hidden whitespace-nowrap tabular-nums">
+                                            <div className="text-center font-mono text-[color:var(--text-secondary)] text-[11px] min-w-0 truncate whitespace-nowrap tabular-nums">
                                                 {prevStr}
                                             </div>
 
-                                            <GlassInput
-                                                type="number"
-                                                inputMode="decimal"
-                                                value={set.weight || ''}
-                                                onChange={e => updateSet(set.id, entry.id, { weight: parseFloat(e.target.value) || 0 })}
-                                                placeholder="0"
-                                                containerClassName="mx-auto w-full max-w-[80px]"
-                                                className="h-10 text-center font-bold text-base p-0 bg-[#1C1C1E] rounded-full tabular-nums focus:bg-[#2C2C2E] transition-colors"
-                                            />
+                                            {/* Weight stepper: [-] [decimal-safe input] [+] */}
+                                            <div className="flex items-stretch h-11 bg-glass-inset rounded-xl overflow-hidden min-w-0">
+                                                <button
+                                                    type="button"
+                                                    aria-label="Decrease weight"
+                                                    onClick={() => stepWeight(set.id, entry.id, -2.5)}
+                                                    className="w-8 shrink-0 flex items-center justify-center text-secondary hover:text-primary active:bg-glass-base transition-colors tap-highlight"
+                                                >
+                                                    <Minus size={14} strokeWidth={3} />
+                                                </button>
+                                                <GlassInput
+                                                    type="text"
+                                                    inputMode="decimal"
+                                                    value={weightDrafts[set.id] !== undefined ? weightDrafts[set.id] : (set.weight || '')}
+                                                    onChange={e => {
+                                                        const value = e.target.value;
+                                                        // Only accept partial-decimal shapes: digits, at most one dot
+                                                        if (!/^\d*\.?\d*$/.test(value)) return;
+                                                        setWeightDrafts(prev => ({ ...prev, [set.id]: value }));
+                                                        const parsed = parseFloat(value);
+                                                        updateSet(set.id, entry.id, { weight: Number.isFinite(parsed) ? parsed : 0 });
+                                                    }}
+                                                    onBlur={() => {
+                                                        setWeightDrafts(prev => {
+                                                            if (prev[set.id] === undefined) return prev;
+                                                            const next = { ...prev };
+                                                            delete next[set.id];
+                                                            return next;
+                                                        });
+                                                    }}
+                                                    placeholder="0"
+                                                    containerClassName="flex-1 min-w-0"
+                                                    className="h-11 w-full text-center font-bold text-[15px] p-0 bg-transparent border-0 rounded-none tabular-nums focus:ring-0 focus:bg-glass-base transition-colors"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    aria-label="Increase weight"
+                                                    onClick={() => stepWeight(set.id, entry.id, 2.5)}
+                                                    className="w-8 shrink-0 flex items-center justify-center text-secondary hover:text-primary active:bg-glass-base transition-colors tap-highlight"
+                                                >
+                                                    <Plus size={14} strokeWidth={3} />
+                                                </button>
+                                            </div>
 
-                                            <GlassInput
-                                                type="number"
-                                                inputMode="numeric"
-                                                value={set.reps || ''}
-                                                onChange={e => updateSet(set.id, entry.id, { reps: parseInt(e.target.value) || 0 })}
-                                                placeholder="0"
-                                                containerClassName="mx-auto w-full max-w-[80px]"
-                                                className="h-10 text-center font-bold text-base p-0 bg-[#1C1C1E] rounded-full tabular-nums focus:bg-[#2C2C2E] transition-colors"
-                                            />
+                                            {/* Reps stepper: [-] [input] [+] */}
+                                            <div className="flex items-stretch h-11 bg-glass-inset rounded-xl overflow-hidden min-w-0">
+                                                <button
+                                                    type="button"
+                                                    aria-label="Decrease reps"
+                                                    onClick={() => stepReps(set.id, entry.id, -1)}
+                                                    className="w-8 shrink-0 flex items-center justify-center text-secondary hover:text-primary active:bg-glass-base transition-colors tap-highlight"
+                                                >
+                                                    <Minus size={14} strokeWidth={3} />
+                                                </button>
+                                                <GlassInput
+                                                    type="number"
+                                                    inputMode="numeric"
+                                                    value={set.reps || ''}
+                                                    onChange={e => updateSet(set.id, entry.id, { reps: parseInt(e.target.value) || 0 })}
+                                                    placeholder="0"
+                                                    containerClassName="flex-1 min-w-0"
+                                                    className="h-11 w-full text-center font-bold text-[15px] p-0 bg-transparent border-0 rounded-none tabular-nums focus:ring-0 focus:bg-glass-base transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    aria-label="Increase reps"
+                                                    onClick={() => stepReps(set.id, entry.id, 1)}
+                                                    className="w-8 shrink-0 flex items-center justify-center text-secondary hover:text-primary active:bg-glass-base transition-colors tap-highlight"
+                                                >
+                                                    <Plus size={14} strokeWidth={3} />
+                                                </button>
+                                            </div>
 
                                             <button
                                                 onClick={async () => {
@@ -171,11 +263,27 @@ export default function ActiveWorkout() {
                                                             setEntryId: set.id,
                                                             setNumber: result.setNumber
                                                         });
+
+                                                        if (result.newPRs && result.newPRs.length > 0) {
+                                                            // Short, tasteful burst — above the rest overlay (z-100).
+                                                            confetti({
+                                                                particleCount: 90,
+                                                                spread: 75,
+                                                                startVelocity: 38,
+                                                                origin: { y: 0.7 },
+                                                                zIndex: 130,
+                                                                colors: ['#FF3B30', '#FFD60A', '#FFFFFF'],
+                                                                disableForReducedMotion: true
+                                                            });
+                                                            setPrToast(`New PR — ${set.weight}${activeSession.unit} × ${set.reps}`);
+                                                            if (prToastTimeout.current) clearTimeout(prToastTimeout.current);
+                                                            prToastTimeout.current = window.setTimeout(() => setPrToast(null), 2500);
+                                                        }
                                                     }
                                                 }}
-                                                className={`h-10 w-full rounded-2xl flex items-center justify-center transition-all tap-highlight ${set.isDone
+                                                className={`h-11 w-full rounded-xl flex items-center justify-center transition-all tap-highlight ${set.isDone
                                                     ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                                                    : 'bg-[#1C1C1E] text-[color:var(--text-tertiary)] hover:bg-[#2C2C2E] hover:text-[color:var(--text-secondary)] border border-[#3A3A3C]'
+                                                    : 'bg-glass-inset text-[color:var(--text-tertiary)] hover:bg-glass-base hover:text-[color:var(--text-secondary)] border border-glass-elevated'
                                                     }`}
                                             >
                                                 <Check size={18} strokeWidth={set.isDone ? 3.5 : 2.5} />
@@ -216,8 +324,15 @@ export default function ActiveWorkout() {
                 </GlassButton>
             </div>
 
+            {prToast && (
+                <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[110] flex items-center gap-2.5 bg-glass-elevated border border-accent/40 text-primary pl-4 pr-5 py-3 rounded-full shadow-glass animate-in slide-in-from-top-4 fade-in duration-200 ease-spring">
+                    <Trophy size={18} className="text-accent shrink-0" />
+                    <span className="font-bold text-[15px] whitespace-nowrap">{prToast}</span>
+                </div>
+            )}
+
             {lastDoneSet && (
-                <div className="fixed bottom-20 md:bottom-24 left-4 right-4 md:left-auto md:w-auto md:right-6 bg-[#3A3A3C] rounded-full p-2 flex z-40 animate-in slide-in-from-bottom-10 fade-in duration-400 ease-spring">
+                <div className="fixed bottom-20 md:bottom-24 left-4 right-4 md:left-auto md:w-auto md:right-6 bg-glass-elevated rounded-full p-2 flex z-40 animate-in slide-in-from-bottom-10 fade-in duration-200 ease-spring">
                     <GlassButton size="md" onClick={() => undoLastSet()} className="flex-1 px-6 text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] rounded-full">
                         <Undo2 size={18} /> Undo Set
                     </GlassButton>
@@ -225,23 +340,23 @@ export default function ActiveWorkout() {
             )}
 
             {showAdd && (
-                <div className="fixed inset-0 z-[100] bg-black/70 flex items-end md:items-center justify-center animate-in fade-in duration-300">
-                    <div className="bg-[#1C1C1E] w-full md:w-[460px] md:rounded-[32px] rounded-t-[32px] p-5 md:p-6 flex flex-col h-[80vh] md:h-[650px] animate-in slide-in-from-bottom-full md:zoom-in-95 duration-400 ease-spring shadow-2xl">
+                <div className="fixed inset-0 z-[100] bg-black/70 flex items-end md:items-center justify-center animate-in fade-in duration-200">
+                    <div className="bg-glass-inset w-full md:w-[460px] md:rounded-[32px] rounded-t-[32px] p-5 md:p-6 flex flex-col h-[80vh] md:h-[650px] animate-in slide-in-from-bottom-full md:zoom-in-95 duration-200 ease-spring shadow-2xl">
                         <div className="flex justify-between items-center mb-5 mt-1">
-                            <h3 className="text-2xl font-extrabold tracking-tight text-[color:var(--text-primary)]">Add Exercise</h3>
-                            <button onClick={() => setShowAdd(false)} className="text-[color:var(--text-secondary)] p-2 bg-[#2C2C2E] hover:bg-[#3A3A3C] hover:text-[color:var(--text-primary)] rounded-full transition-colors tap-highlight">Close</button>
+                            <h3 className="ios-h2 text-[color:var(--text-primary)]">Add Exercise</h3>
+                            <button onClick={() => setShowAdd(false)} className="text-[color:var(--text-secondary)] p-2 bg-glass-base hover:bg-glass-elevated hover:text-[color:var(--text-primary)] rounded-full transition-colors tap-highlight">Close</button>
                         </div>
 
                         <div className="relative mb-4">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]" size={20} />
-                            <GlassInput type="text" placeholder="Search exercises..." className="pl-12 h-14 bg-[#2C2C2E] rounded-2xl text-lg font-medium" />
+                            <GlassInput type="text" placeholder="Search exercises..." className="pl-12 h-14 bg-glass-base rounded-2xl text-lg font-medium" />
                         </div>
 
                         <div className="flex-1 overflow-y-auto flex flex-col gap-2.5 pr-1 pb-4">
                             {exercises.map(ex => (
                                 <button
                                     key={ex.id}
-                                    className="flex items-center justify-between p-4 bg-[#2C2C2E] hover:bg-[#3A3A3C] rounded-2xl text-left transition-colors tap-highlight"
+                                    className="flex items-center justify-between p-4 bg-glass-base hover:bg-glass-elevated rounded-2xl text-left transition-colors tap-highlight"
                                     onClick={() => {
                                         addExercise(ex.id);
                                         setShowAdd(false);

@@ -52,8 +52,8 @@ export function TemplateEdit() {
 
     if (isAdding) {
         return (
-            <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-300">
-                <header className="flex items-center gap-3 mb-2 px-1 sticky top-0 bg-[#000000] z-20 py-4 -my-4">
+            <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-200">
+                <header className="flex items-center gap-3 mb-2 px-1 sticky top-0 bg-background z-20 py-4 -my-4">
                     <button onClick={() => setIsAdding(false)} className="p-2 -ml-2 text-accent rounded-full hover:bg-black/10 tap-highlight">
                         <ArrowLeft size={24} />
                     </button>
@@ -99,14 +99,14 @@ export function TemplateEdit() {
     }
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
+        <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200">
             <header className="flex items-center justify-between mb-2 mt-2 px-1">
                 <div className="flex items-center gap-3">
                     <button onClick={() => navigate('/templates')} className="p-2 -ml-2 text-accent rounded-full hover:bg-black/10 tap-highlight">
                         <ArrowLeft size={24} />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-[color:var(--text-primary)]">{template.name}</h1>
+                        <h1 className="ios-h2 text-[color:var(--text-primary)]">{template.name}</h1>
                         <p className="text-[color:var(--text-secondary)] font-medium text-[13px]">{templateExercises.length} exercises</p>
                     </div>
                 </div>
@@ -134,7 +134,7 @@ export function TemplateEdit() {
 
                 <GlassButton
                     variant="secondary"
-                    className="mt-4 p-4 border border-dashed border-[#3A3A3C] text-accent hover:border-accent/40 rounded-2xl flex flex-col items-center justify-center gap-2 tap-highlight shadow-none"
+                    className="mt-4 p-4 border border-dashed border-glass-elevated text-accent hover:border-accent/40 rounded-2xl flex flex-col items-center justify-center gap-2 tap-highlight shadow-none"
                     onClick={() => setIsAdding(true)}
                 >
                     <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">

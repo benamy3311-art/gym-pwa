@@ -11,8 +11,8 @@ export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function GlassCard({ children, className, variant = 'base', ...props }: GlassCardProps) {
     const variants = {
-        base: 'bg-[color:var(--glass-base)] text-[color:var(--text-primary)]',
-        elevated: 'bg-[color:var(--glass-elevated)] text-[color:var(--text-primary)]',
+        base: 'bg-[color:var(--glass-base)] text-[color:var(--text-primary)] shadow-[var(--shadow-sm)]',
+        elevated: 'bg-[color:var(--glass-elevated)] text-[color:var(--text-primary)] shadow-[var(--shadow-md)] border-t border-white/[0.04]',
         inset: 'bg-[color:var(--glass-inset)] text-[color:var(--text-primary)]',
     };
 

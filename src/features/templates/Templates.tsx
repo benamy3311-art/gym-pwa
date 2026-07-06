@@ -45,7 +45,7 @@ export default function Templates() {
     };
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
+        <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200">
             <header className="flex flex-col gap-3 mb-2 mt-4 px-1">
                 <div className="flex items-end justify-between">
                     <div>

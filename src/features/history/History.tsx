@@ -47,7 +47,7 @@ export default function History() {
     };
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-200 pb-8">
             <header className="mb-2 mt-4 px-1">
                 <h1 className="ios-title mb-1">History</h1>
                 <p className="ios-body text-[color:var(--text-secondary)]">Your past workouts</p>
@@ -55,7 +55,7 @@ export default function History() {
 
             <div className="flex flex-col gap-3 px-1">
                 {sessions.map(s => (
-                    <GlassCard key={s.id} variant="base" className="flex flex-col gap-3 group hover:bg-[#3A3A3C] transition-colors cursor-pointer tap-highlight">
+                    <GlassCard key={s.id} variant="base" className="flex flex-col gap-3 group hover:bg-glass-elevated transition-colors cursor-pointer tap-highlight">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h3 className="ios-h3 group-hover:text-[color:var(--accent)] transition-colors text-[color:var(--text-primary)]">{s.name}</h3>
@@ -72,7 +72,7 @@ export default function History() {
                             )}
                         </div>
 
-                        <div className="flex flex-wrap gap-5 mt-1 pt-3 border-t border-[#3A3A3C]">
+                        <div className="flex flex-wrap gap-5 mt-1 pt-3 border-t border-glass-elevated">
                             <div className="flex items-center gap-2 ios-subhead font-semibold text-[color:var(--text-primary)] opacity-90">
                                 <Clock size={16} className="text-[color:var(--accent)]" />
                                 {formatDuration(s.startedAt, s.endedAt)}

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WorkoutSession, WorkoutExerciseEntry, SetEntry } from '../../domain/models';
+import { WorkoutSession, WorkoutExerciseEntry, SetEntry, PR } from '../../domain/models';
 import { WorkoutRepo, PRRepo } from '../../data/repositories';
 import { determineNewPRs } from '../../domain/prLogic';
 
@@ -16,7 +16,7 @@ interface WorkoutState {
     addExercise: (exerciseId: string) => Promise<void>;
     addSet: (entryId: string, explicitWeight?: number, explicitReps?: number) => Promise<void>;
     updateSet: (setId: string, entryId: string, updates: Partial<SetEntry>) => Promise<void>;
-    toggleSetDone: (setId: string, entryId: string, exerciseId: string) => Promise<{ isNewlyDone: boolean; setNumber: number } | void>;
+    toggleSetDone: (setId: string, entryId: string, exerciseId: string) => Promise<{ isNewlyDone: boolean; setNumber: number; newPRs: PR[] } | void>;
     undoLastSet: () => Promise<void>;
     removeSet: (setId: string, entryId: string) => Promise<void>;
     removeExercise: (entryId: string) => Promise<void>;
@@ -122,13 +122,15 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
     },
 
     updateSet: async (setId, entryId, updates) => {
-        await WorkoutRepo.updateSet(setId, updates);
+        // Optimistic: update state synchronously first so rapid stepper taps
+        // read fresh values, then persist in the background.
         set((state) => ({
             setsByEntry: {
                 ...state.setsByEntry,
                 [entryId]: (state.setsByEntry[entryId] || []).map(s => s.id === setId ? { ...s, ...updates } : s)
             }
         }));
+        await WorkoutRepo.updateSet(setId, updates);
     },
 
     toggleSetDone: async (setId, entryId, exerciseId) => {
@@ -150,15 +152,16 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
             lastDoneSet: newIsDone ? { setId, entryId, exerciseId } : state.lastDoneSet
         }));
 
+        let newPRs: PR[] = [];
         if (newIsDone) {
             const existingPRs = await PRRepo.getPRsForExercise(exerciseId);
-            const newPRs = determineNewPRs(exerciseId, { ...setTarget, isDone: true }, existingPRs, activeSession.id);
+            newPRs = determineNewPRs(exerciseId, { ...setTarget, isDone: true }, existingPRs, activeSession.id);
             if (newPRs.length > 0) {
                 await PRRepo.savePRs(newPRs);
             }
         }
 
-        return { isNewlyDone: newIsDone, setNumber };
+        return { isNewlyDone: newIsDone, setNumber, newPRs };
     },
 
     undoLastSet: async () => {
