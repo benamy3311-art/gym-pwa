@@ -45,7 +45,7 @@ export default function ActiveWorkout() {
         const current = latestSet(setId, entryId);
         if (!current) return;
         const draft = weightDrafts[setId];
-        const parsedDraft = draft !== undefined ? parseFloat(draft) : NaN;
+        const parsedDraft = draft !== undefined ? parseFloat(draft.replace(',', '.')) : NaN;
         const base = Number.isFinite(parsedDraft) ? parsedDraft : (current.weight || 0);
         const next = Math.max(0, Math.round((base + delta) * 100) / 100);
         // Clear any draft so the committed value is displayed.
@@ -193,10 +193,12 @@ export default function ActiveWorkout() {
                                                     value={weightDrafts[set.id] !== undefined ? weightDrafts[set.id] : (set.weight || '')}
                                                     onChange={e => {
                                                         const value = e.target.value;
-                                                        // Only accept partial-decimal shapes: digits, at most one dot
-                                                        if (!/^\d*\.?\d*$/.test(value)) return;
+                                                        // Only accept partial-decimal shapes: digits, at most one separator.
+                                                        // Accept both "." and "," since iOS shows a comma as the decimal
+                                                        // key on the decimal keypad in many Spanish-language locales.
+                                                        if (!/^\d*[.,]?\d*$/.test(value)) return;
                                                         setWeightDrafts(prev => ({ ...prev, [set.id]: value }));
-                                                        const parsed = parseFloat(value);
+                                                        const parsed = parseFloat(value.replace(',', '.'));
                                                         updateSet(set.id, entry.id, { weight: Number.isFinite(parsed) ? parsed : 0 });
                                                     }}
                                                     onBlur={() => {
