@@ -153,7 +153,7 @@ export function DataManagement() {
                             </div>
                         </div>
                     ) : (
-                        <GlassButton variant="secondary" onClick={() => signInWithGoogle()} className="w-full text-sm font-semibold rounded-xl shadow-inner-dark">
+                        <GlassButton variant="secondary" onClick={() => signInWithGoogle().catch((err: any) => alert('Google sign-in failed: ' + err.message))} className="w-full text-sm font-semibold rounded-xl shadow-inner-dark">
                             <Cloud size={16} className="mr-1.5" /> Sign in with Google to sync
                         </GlassButton>
                     )}

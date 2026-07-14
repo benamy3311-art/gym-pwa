@@ -10,7 +10,7 @@ import Layout from './ui/Layout';
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
 import { auth } from './firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 import { syncNow } from './data/cloudSync';
 
 const SYNC_INTERVAL_MS = 2 * 60 * 1000;
@@ -20,6 +20,10 @@ function App() {
 
     useEffect(() => {
         if (!auth) return;
+        getRedirectResult(auth).catch((err) => {
+            console.error('Google sign-in failed:', err);
+            alert('Google sign-in failed: ' + err.message);
+        });
         return onAuthStateChanged(auth, setUser);
     }, [setUser]);
 

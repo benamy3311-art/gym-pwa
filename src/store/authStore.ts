@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { signInWithPopup, signOut, type User } from 'firebase/auth';
+import { signInWithRedirect, signOut, type User } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 
 interface AuthState {
@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     setUser: (user) => set({ user, initializing: false }),
     signInWithGoogle: async () => {
         if (!auth) return;
-        await signInWithPopup(auth, googleProvider);
+        await signInWithRedirect(auth, googleProvider);
     },
     signOutUser: async () => {
         if (!auth) return;
