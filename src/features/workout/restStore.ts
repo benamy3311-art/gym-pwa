@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { unlockAudio, playRestDoneChime } from '../../utils/sound';
 
 export interface RestSource {
     sessionId: string;
@@ -31,6 +32,9 @@ export const useRestStore = create<RestState>((set, get) => ({
     source: null,
 
     startRest: (ms, source = undefined) => {
+        // Started from a user tap, so this is a valid moment to unlock iOS audio
+        // for the finish chime.
+        unlockAudio();
         set({
             isActive: true,
             totalMs: ms,
@@ -65,7 +69,10 @@ export const useRestStore = create<RestState>((set, get) => ({
         const remain = Math.max(0, totalMs - elapsed);
 
         if (remain === 0) {
+            // Vibration works on Android; iOS Safari ignores it, so the chime is
+            // the reliable cue there.
             if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+            playRestDoneChime();
             set({ isActive: false, remainingMs: 0, startedAt: null, source: null });
         } else {
             set({ remainingMs: remain });

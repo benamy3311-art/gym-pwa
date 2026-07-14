@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { WorkoutRepo, PRRepo } from '../../data/repositories';
+import { db } from '../../data/db';
 import { WorkoutSession } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { DataManagement } from '../settings/DataManagement';
@@ -15,24 +15,41 @@ export default function History() {
 
     useEffect(() => {
         async function loadHistory() {
-            const all = await WorkoutRepo.getAllSessions();
-            const finished = all.filter(s => s.endedAt);
+            // Load each table once and group in memory instead of running a query
+            // per session/entry (which got slow as history grew).
+            const [allSessions, allEntries, allSets, allPrs] = await Promise.all([
+                db.workoutSessions.toArray(),
+                db.workoutExerciseEntries.toArray(),
+                db.setEntries.toArray(),
+                db.prs.toArray(),
+            ]);
 
-            const enriched: SessionData[] = [];
-            for (const s of finished) {
-                // Calculate volume
-                const entries = await WorkoutRepo.getSessionExercises(s.id);
-                let vol = 0;
-                for (const e of entries) {
-                    const sets = await WorkoutRepo.getSetsForEntry(e.id);
-                    vol += sets.filter(x => x.isDone).reduce((acc, set) => acc + (set.weight * set.reps), 0);
-                }
-
-                // Count PRs
-                const prCount = await PRRepo.countPRsForSession(s.id);
-
-                enriched.push({ ...s, volume: vol, prCount });
+            const entryIdsBySession = new Map<string, string[]>();
+            for (const e of allEntries) {
+                const arr = entryIdsBySession.get(e.sessionId);
+                if (arr) arr.push(e.id);
+                else entryIdsBySession.set(e.sessionId, [e.id]);
             }
+
+            const volumeByEntry = new Map<string, number>();
+            for (const set of allSets) {
+                if (!set.isDone) continue;
+                volumeByEntry.set(set.entryId, (volumeByEntry.get(set.entryId) || 0) + set.weight * set.reps);
+            }
+
+            const prCountBySession = new Map<string, number>();
+            for (const pr of allPrs) {
+                prCountBySession.set(pr.sessionId, (prCountBySession.get(pr.sessionId) || 0) + 1);
+            }
+
+            const enriched: SessionData[] = allSessions
+                .filter(s => s.endedAt)
+                .map(s => {
+                    const volume = (entryIdsBySession.get(s.id) || [])
+                        .reduce((acc, entryId) => acc + (volumeByEntry.get(entryId) || 0), 0);
+                    return { ...s, volume, prCount: prCountBySession.get(s.id) || 0 };
+                });
+
             // Sort by latest completed first
             enriched.sort((a, b) => b.endedAt! - a.endedAt!);
             setSessions(enriched);

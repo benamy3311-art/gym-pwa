@@ -7,6 +7,7 @@ import { db, seedDefaultExercises } from '../../data/db';
 import { useAuthStore } from '../../store/authStore';
 import { firebaseEnabled } from '../../firebase';
 import { syncNow, getLastSyncedAt } from '../../data/cloudSync';
+import { toast, confirmDialog } from '../../store/uiStore';
 import { cn } from '../../utils/cn';
 
 const LAST_BACKUP_KEY = 'gymPwa_lastBackupAt';
@@ -43,7 +44,7 @@ export function DataManagement() {
             await syncNow(user);
             setLastSyncedAtState(getLastSyncedAt());
         } catch (err: any) {
-            alert("Sync failed: " + err.message);
+            toast('Sync failed: ' + err.message, 'error');
         } finally {
             setSyncing(false);
         }
@@ -64,7 +65,7 @@ export function DataManagement() {
             localStorage.setItem(LAST_BACKUP_KEY, String(now));
             setLastBackupAt(now);
         } catch (e) {
-            alert("Failed to export data");
+            toast('Failed to export data', 'error');
         }
     };
 
@@ -77,10 +78,10 @@ export function DataManagement() {
             try {
                 const json = event.target?.result as string;
                 await importData(json);
-                alert('Data completely imported! Refreshing...');
-                window.location.reload();
+                toast('Data imported — refreshing…', 'success');
+                setTimeout(() => window.location.reload(), 900);
             } catch (err: any) {
-                alert("Failed to import data: " + err.message);
+                toast('Failed to import: ' + err.message, 'error');
             }
             if (fileRef.current) fileRef.current.value = '';
         };
@@ -88,14 +89,17 @@ export function DataManagement() {
     };
 
     const handleLoadDefaults = async () => {
-        if (confirm("Load default predefined exercises? (Won't duplicate existing ones)")) {
-            try {
-                await seedDefaultExercises();
-                alert('Default exercises loaded! Refreshing...');
-                window.location.reload();
-            } catch (err: any) {
-                alert("Failed to load defaults: " + err.message);
-            }
+        const ok = await confirmDialog({
+            message: "Load default predefined exercises? Existing ones won't be duplicated.",
+            confirmText: 'Load',
+        });
+        if (!ok) return;
+        try {
+            await seedDefaultExercises();
+            toast('Default exercises loaded — refreshing…', 'success');
+            setTimeout(() => window.location.reload(), 900);
+        } catch (err: any) {
+            toast('Failed to load defaults: ' + err.message, 'error');
         }
     };
 
@@ -153,7 +157,7 @@ export function DataManagement() {
                             </div>
                         </div>
                     ) : (
-                        <GlassButton variant="secondary" onClick={() => signInWithGoogle().catch((err: any) => alert('Google sign-in failed: ' + err.message))} className="w-full text-sm font-semibold rounded-xl shadow-inner-dark">
+                        <GlassButton variant="secondary" onClick={() => signInWithGoogle().catch((err: any) => toast('Google sign-in failed: ' + err.message, 'error'))} className="w-full text-sm font-semibold rounded-xl shadow-inner-dark">
                             <Cloud size={16} className="mr-1.5" /> Sign in with Google to sync
                         </GlassButton>
                     )}

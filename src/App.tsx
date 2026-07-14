@@ -12,6 +12,7 @@ import { useAuthStore } from './store/authStore';
 import { auth } from './firebase';
 import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 import { syncNow } from './data/cloudSync';
+import { toast } from './store/uiStore';
 
 const SYNC_INTERVAL_MS = 2 * 60 * 1000;
 
@@ -22,7 +23,7 @@ function App() {
         if (!auth) return;
         getRedirectResult(auth).catch((err) => {
             console.error('Google sign-in failed:', err);
-            alert('Google sign-in failed: ' + err.message);
+            toast('Google sign-in failed: ' + err.message, 'error');
         });
         return onAuthStateChanged(auth, setUser);
     }, [setUser]);

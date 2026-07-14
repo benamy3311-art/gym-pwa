@@ -2,6 +2,7 @@ import { doc, getDoc, writeBatch, Timestamp } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { firestore } from '../firebase';
 import { exportData, importData, type BackupData } from '../utils/backup';
+import { confirmDialog } from '../store/uiStore';
 
 const LAST_SYNCED_KEY = 'gymPwa_lastSyncedAt';
 
@@ -90,9 +91,12 @@ export async function syncNow(user: User): Promise<void> {
     }
 
     // Cloud has changes this device hasn't seen.
-    const useCloud = confirm(
-        'Hay datos más nuevos en la nube (de otro dispositivo). ¿Usar esos datos? (Cancelar para subir los de este dispositivo y sobrescribir la nube)'
-    );
+    const useCloud = await confirmDialog({
+        title: 'Sincronizar',
+        message: 'Hay datos más nuevos en la nube (de otro dispositivo). ¿Usar esos datos? Si cancelás, se suben los de este dispositivo y se sobrescribe la nube.',
+        confirmText: 'Usar la nube',
+        cancelText: 'Subir estos',
+    });
     if (useCloud) {
         await pullBackup(user.uid);
     } else {

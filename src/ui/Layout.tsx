@@ -1,6 +1,7 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { Home, List, Clock, Dumbbell, PieChart } from 'lucide-react';
 import { cn } from './GlassCard';
+import { Toaster } from './Toaster';
 
 export default function Layout() {
 
@@ -8,6 +9,7 @@ export default function Layout() {
 
     return (
         <div className="min-h-screen flex flex-col pb-20 md:pb-0 relative">
+            <Toaster />
             <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col pt-8">
                 <Outlet />
             </main>
