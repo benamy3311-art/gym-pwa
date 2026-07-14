@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { useWorkoutStore } from './store';
 import { useRestStore } from './restStore';
+import { useAuthStore } from '../../store/authStore';
 import { ExerciseRepo } from '../../data/repositories';
+import { syncNow } from '../../data/cloudSync';
 import { Exercise, SetEntry } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
@@ -99,6 +101,10 @@ export default function ActiveWorkout() {
     const handleFinish = async () => {
         await finishWorkout();
         navigate('/history');
+        // Back up the just-finished session right away instead of waiting for the
+        // periodic auto-sync, so it's safe even if the app is force-closed after.
+        const { user } = useAuthStore.getState();
+        if (user) syncNow(user).catch(console.error);
     };
 
     const handleCancel = async () => {
