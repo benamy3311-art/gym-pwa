@@ -7,6 +7,10 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Don't let the SW's navigation fallback hijack Firebase Auth's reserved
+      // /__/auth/* routes (served same-origin via the vercel.json proxy) — otherwise
+      // the OAuth handler would render the app shell and sign-in would silently fail.
+      workbox: { navigateFallbackDenylist: [/^\/__\//] },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Gym Tracker PWA',
