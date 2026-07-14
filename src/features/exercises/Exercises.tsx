@@ -8,6 +8,7 @@ import { GlassButton } from '../../ui/GlassButton';
 import { GlassInput } from '../../ui/GlassInput';
 import { BodyPartIcon } from '../../ui/anatomy/BodyPartIcon';
 import { Search, Plus, Dumbbell, ImagePlus } from 'lucide-react';
+import { toast } from '../../store/uiStore';
 
 export default function Exercises() {
     const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -49,7 +50,7 @@ export default function Exercises() {
             const latest = await ExerciseRepo.getAll();
             setExercises(latest);
         } catch (err) {
-            alert("Error saving image.");
+            toast('Error saving image.', 'error');
         } finally {
             setEditingEx(null);
             if (fileInputRef.current) fileInputRef.current.value = '';

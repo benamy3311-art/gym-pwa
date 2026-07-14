@@ -12,6 +12,7 @@ import { GlassButton } from '../../ui/GlassButton';
 import { Play, Plus, ListVideo, Flame, Dumbbell } from 'lucide-react';
 import { sortTemplates } from '../../utils/templateUtils';
 import { startWorkoutFromTemplate } from '../workout/startWorkoutFromTemplate';
+import { toast } from '../../store/uiStore';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function Home() {
             await loadActiveWorkout();
             navigate('/workout');
         } catch (error: any) {
-            alert(error.message || 'Error starting workout');
+            toast(error.message || 'Error starting workout', 'error');
         }
     };
 

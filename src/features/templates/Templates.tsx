@@ -5,6 +5,7 @@ import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
 import { Plus, Trash2, LayoutList, Download } from 'lucide-react';
 import { importFourDayRoutine } from './importFourDayRoutine';
+import { toast, confirmDialog } from '../../store/uiStore';
 
 export default function Templates() {
     const navigate = useNavigate();
@@ -17,7 +18,13 @@ export default function Templates() {
 
     const handleDelete = async (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
-        if (confirm('Are you sure you want to delete this routine?')) {
+        const ok = await confirmDialog({
+            title: 'Delete routine?',
+            message: 'This routine will be removed. This cannot be undone.',
+            confirmText: 'Delete',
+            danger: true,
+        });
+        if (ok) {
             await deleteTemplate(id);
         }
     };
@@ -34,10 +41,10 @@ export default function Templates() {
         setIsImporting(true);
         try {
             const result = await importFourDayRoutine();
-            alert(`Success! Created: ${result.created}, Updated: ${result.updated}`);
+            toast(`Imported — created ${result.created}, updated ${result.updated}`, 'success');
             await loadTemplates();
         } catch (error) {
-            alert('Error importing routine.');
+            toast('Error importing routine.', 'error');
             console.error(error);
         } finally {
             setIsImporting(false);

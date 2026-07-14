@@ -6,6 +6,8 @@ import { useRestStore } from './restStore';
 import { useAuthStore } from '../../store/authStore';
 import { ExerciseRepo } from '../../data/repositories';
 import { syncNow } from '../../data/cloudSync';
+import { confirmDialog } from '../../store/uiStore';
+import { unlockAudio } from '../../utils/sound';
 import { Exercise, SetEntry } from '../../domain/models';
 import { GlassCard } from '../../ui/GlassCard';
 import { GlassButton } from '../../ui/GlassButton';
@@ -108,7 +110,14 @@ export default function ActiveWorkout() {
     };
 
     const handleCancel = async () => {
-        if (confirm('Cancel workout? No data will be saved.')) {
+        const ok = await confirmDialog({
+            title: 'Cancel workout?',
+            message: 'No data will be saved.',
+            confirmText: 'Discard',
+            cancelText: 'Keep going',
+            danger: true,
+        });
+        if (ok) {
             await cancelWorkout();
             navigate('/');
         }
@@ -148,7 +157,11 @@ export default function ActiveWorkout() {
                                     <h3 className="ios-h3 truncate max-w-[200px]">{ex?.name || 'Unknown Exercise'}</h3>
                                 </div>
                                 <button
-                                    onClick={() => confirm('Remove exercise?') && removeExercise(entry.id)}
+                                    onClick={async () => {
+                                        if (await confirmDialog({ message: 'Remove this exercise from the workout?', confirmText: 'Remove', danger: true })) {
+                                            removeExercise(entry.id);
+                                        }
+                                    }}
                                     className="text-tertiary hover:text-red-400 hover:bg-black/20 p-2 rounded-full transition-all tap-highlight"
                                 >
                                     <Trash2 size={18} />
@@ -215,7 +228,7 @@ export default function ActiveWorkout() {
                                                             return next;
                                                         });
                                                     }}
-                                                    placeholder="0"
+                                                    placeholder={prevSet ? String(prevSet.weight) : '0'}
                                                     containerClassName="flex-1 min-w-0"
                                                     className="h-11 w-full text-center font-bold text-[15px] p-0 bg-transparent border-0 rounded-none tabular-nums focus:ring-0 focus:bg-glass-base transition-colors"
                                                 />
@@ -244,7 +257,7 @@ export default function ActiveWorkout() {
                                                     inputMode="numeric"
                                                     value={set.reps || ''}
                                                     onChange={e => updateSet(set.id, entry.id, { reps: parseInt(e.target.value) || 0 })}
-                                                    placeholder="0"
+                                                    placeholder={prevSet ? String(prevSet.reps) : '0'}
                                                     containerClassName="flex-1 min-w-0"
                                                     className="h-11 w-full text-center font-bold text-[15px] p-0 bg-transparent border-0 rounded-none tabular-nums focus:ring-0 focus:bg-glass-base transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                                 />
@@ -260,6 +273,8 @@ export default function ActiveWorkout() {
 
                                             <button
                                                 onClick={async () => {
+                                                    // Unlock audio within this tap so the rest-end chime can play (iOS).
+                                                    unlockAudio();
                                                     const result = await toggleSetDone(set.id, entry.id, entry.exerciseId);
                                                     if (result && result.isNewlyDone) {
                                                         const ex = exercises.find(e => e.id === entry.exerciseId);
