@@ -2,31 +2,35 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { Home, List, Clock, Dumbbell, PieChart } from 'lucide-react';
 import { cn } from './GlassCard';
 import { Toaster } from './Toaster';
+import { PwaUpdatePrompt } from './PwaUpdatePrompt';
 
 export default function Layout() {
-    // During an active workout the inputs summon the iOS keyboard, which displaces
-    // the fixed bottom bar and leaves it floating over the sets. Hide it there —
-    // the workout is a focused, full-screen task (Finish/Cancel live in it).
+    // During an active workout the inputs summon the iOS keyboard; hide the bar there.
     const hideNav = useLocation().pathname === '/workout';
 
     return (
-        <div className={cn("min-h-screen flex flex-col relative", !hideNav && "pb-20 md:pb-0")}>
+        // App-shell: fixed-height root, scrolling happens INSIDE <main> (not on the
+        // body), and the tab bar is a normal flex child. That keeps it pinned to the
+        // bottom instead of being a position:fixed element that lags / gets stuck
+        // mid-screen during momentum scrolling on iOS.
+        <div className="h-[100dvh] flex flex-col overflow-hidden relative">
             <Toaster />
-            <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col pt-8">
+            <PwaUpdatePrompt />
+
+            <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden w-full max-w-2xl mx-auto p-4 pt-8 flex flex-col md:order-last">
                 <Outlet />
             </main>
 
-            {/* Liquid Glass Bottom Tab Bar */}
             {!hideNav && (
-            <nav className="fixed bottom-0 left-0 right-0 bg-glass-inset border-t border-glass-base pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b pt-1 pb-2 md:pb-1">
-                <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8 px-2 pt-2">
-                    <NavItem to="/" icon={<Home size={22} />} label="Start" />
-                    <NavItem to="/templates" icon={<List size={22} />} label="Routines" />
-                    <NavItem to="/exercises" icon={<Dumbbell size={22} />} label="Exercises" />
-                    <NavItem to="/history" icon={<Clock size={22} />} label="History" />
-                    <NavItem to="/analytics" icon={<PieChart size={22} />} label="Analytics" />
-                </div>
-            </nav>
+                <nav className="shrink-0 bg-glass-inset border-t border-glass-base pb-safe md:order-first md:border-t-0 md:border-b">
+                    <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8 px-2 pt-2 pb-2 md:pb-1">
+                        <NavItem to="/" icon={<Home size={22} />} label="Start" />
+                        <NavItem to="/templates" icon={<List size={22} />} label="Routines" />
+                        <NavItem to="/exercises" icon={<Dumbbell size={22} />} label="Exercises" />
+                        <NavItem to="/history" icon={<Clock size={22} />} label="History" />
+                        <NavItem to="/analytics" icon={<PieChart size={22} />} label="Analytics" />
+                    </div>
+                </nav>
             )}
         </div>
     );

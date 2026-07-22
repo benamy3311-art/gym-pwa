@@ -6,7 +6,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 'prompt' (not 'autoUpdate') so a new deploy surfaces an explicit
+      // "new version available" banner the user taps to reload — reliable on
+      // iOS, where silent auto-update often leaves the old assets running.
+      registerType: 'prompt',
       // Don't let the SW's navigation fallback hijack Firebase Auth's reserved
       // /__/auth/* routes (served same-origin via the vercel.json proxy) — otherwise
       // the OAuth handler would render the app shell and sign-in would silently fail.
