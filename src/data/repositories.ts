@@ -149,22 +149,42 @@ export const WorkoutRepo = {
     },
 
     async getLastExerciseSets(exerciseId: string, currentSessionId: string): Promise<SetEntry[]> {
-        const entries = await db.workoutExerciseEntries.where('exerciseId').equals(exerciseId).toArray();
+        // Match on the exercise NAME, not just its id. The same exercise can exist
+        // under several ids (seeded separately across devices/installs), so history
+        // must be found regardless of which copy a past session referenced.
+        const target = await db.exercises.get(exerciseId);
+        const name = target?.name.trim().toLowerCase();
+        const exerciseIds = name
+            ? (await db.exercises.filter(e => e.name.trim().toLowerCase() === name).toArray()).map(e => e.id)
+            : [exerciseId];
+        if (!exerciseIds.includes(exerciseId)) exerciseIds.push(exerciseId);
+
+        const entries = await db.workoutExerciseEntries.where('exerciseId').anyOf(exerciseIds).toArray();
         const pastEntries = entries.filter(e => e.sessionId !== currentSessionId);
         if (pastEntries.length === 0) return [];
 
-        const sessionIds = pastEntries.map(e => e.sessionId);
-        const sessions = await db.workoutSessions.where('id').anyOf(sessionIds).toArray();
+        // First past entry per session (an exercise usually appears once per session).
+        const entryBySession = new Map<string, WorkoutExerciseEntry>();
+        for (const e of pastEntries) {
+            if (!entryBySession.has(e.sessionId)) entryBySession.set(e.sessionId, e);
+        }
 
-        sessions.sort((a, b) => b.startedAt - a.startedAt);
-        const lastSession = sessions.find(s => s.endedAt !== undefined);
+        const sessions = await db.workoutSessions.where('id').anyOf([...entryBySession.keys()]).toArray();
+        const finishedNewestFirst = sessions
+            .filter(s => s.endedAt !== undefined)
+            .sort((a, b) => b.startedAt - a.startedAt);
 
-        if (!lastSession) return [];
-
-        const lastEntry = pastEntries.find(e => e.sessionId === lastSession.id);
-        if (!lastEntry) return [];
-
-        return await db.setEntries.where('entryId').equals(lastEntry.id).sortBy('setNumber');
+        // Return the newest finished session that actually recorded something, so an
+        // empty/aborted session doesn't shadow the real previous numbers.
+        for (const sess of finishedNewestFirst) {
+            const entry = entryBySession.get(sess.id);
+            if (!entry) continue;
+            const setsForEntry = await db.setEntries.where('entryId').equals(entry.id).sortBy('setNumber');
+            if (setsForEntry.some(s => (s.weight || 0) > 0 || (s.reps || 0) > 0)) {
+                return setsForEntry;
+            }
+        }
+        return [];
     }
 };
 
