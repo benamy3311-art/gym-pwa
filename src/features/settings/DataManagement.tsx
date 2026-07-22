@@ -41,7 +41,7 @@ export function DataManagement() {
         if (!user) return;
         setSyncing(true);
         try {
-            await syncNow(user);
+            await syncNow(user, true);
             setLastSyncedAtState(getLastSyncedAt());
         } catch (err: any) {
             toast('Sync failed: ' + err.message, 'error');

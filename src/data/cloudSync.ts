@@ -71,10 +71,13 @@ async function pullBackup(uid: string): Promise<void> {
 
 /**
  * Reconciles this device with the cloud backup. Last-write-wins at the whole-database
- * level: if the cloud has changes this device hasn't seen (pushed from another device),
- * pulling would silently discard whatever's local, so we ask instead of guessing.
+ * level. If the cloud has changes this device hasn't seen (pushed from another device),
+ * pulling would silently discard whatever's local — so we only ask when the user asked
+ * to sync (`interactive`). Automatic/background syncs never prompt: they push when
+ * there's no conflict and otherwise defer to a manual "Sync now", which avoids nagging
+ * every cycle and stops two signed-in devices from ping-ponging prompts at each other.
  */
-export async function syncNow(user: User): Promise<void> {
+export async function syncNow(user: User, interactive = false): Promise<void> {
     const cloudUpdatedAt = await getCloudUpdatedAt(user.uid);
     const lastSyncedAt = getLastSyncedAt();
 
@@ -90,7 +93,10 @@ export async function syncNow(user: User): Promise<void> {
         return;
     }
 
-    // Cloud has changes this device hasn't seen.
+    // Cloud has changes this device hasn't seen. Never resolve this silently in the
+    // background — wait for an explicit "Sync now" so we don't overwrite either side.
+    if (!interactive) return;
+
     const useCloud = await confirmDialog({
         title: 'Sincronizar',
         message: 'Hay datos más nuevos en la nube (de otro dispositivo). ¿Usar esos datos? Si cancelás, se suben los de este dispositivo y se sobrescribe la nube.',

@@ -1,20 +1,23 @@
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { Home, List, Clock, Dumbbell, PieChart } from 'lucide-react';
 import { cn } from './GlassCard';
 import { Toaster } from './Toaster';
 
 export default function Layout() {
-
-
+    // During an active workout the inputs summon the iOS keyboard, which displaces
+    // the fixed bottom bar and leaves it floating over the sets. Hide it there —
+    // the workout is a focused, full-screen task (Finish/Cancel live in it).
+    const hideNav = useLocation().pathname === '/workout';
 
     return (
-        <div className="min-h-screen flex flex-col pb-20 md:pb-0 relative">
+        <div className={cn("min-h-screen flex flex-col relative", !hideNav && "pb-20 md:pb-0")}>
             <Toaster />
             <main className="flex-1 max-w-2xl w-full mx-auto p-4 flex flex-col pt-8">
                 <Outlet />
             </main>
 
             {/* Liquid Glass Bottom Tab Bar */}
+            {!hideNav && (
             <nav className="fixed bottom-0 left-0 right-0 bg-glass-inset border-t border-glass-base pb-safe z-50 md:top-0 md:bottom-auto md:border-t-0 md:border-b pt-1 pb-2 md:pb-1">
                 <div className="max-w-2xl mx-auto flex items-center justify-around md:justify-center md:gap-8 px-2 pt-2">
                     <NavItem to="/" icon={<Home size={22} />} label="Start" />
@@ -24,6 +27,7 @@ export default function Layout() {
                     <NavItem to="/analytics" icon={<PieChart size={22} />} label="Analytics" />
                 </div>
             </nav>
+            )}
         </div>
     );
 }
