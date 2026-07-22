@@ -1,8 +1,8 @@
 import { doc, getDoc, writeBatch, Timestamp } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { firestore } from '../firebase';
-import { exportData, importData, type BackupData } from '../utils/backup';
-import { confirmDialog } from '../store/uiStore';
+import { db } from './db';
+import { exportData, type BackupData } from '../utils/backup';
 
 const LAST_SYNCED_KEY = 'gymPwa_lastSyncedAt';
 
@@ -32,13 +32,6 @@ function setLastSyncedAt(timestamp: number) {
     localStorage.setItem(LAST_SYNCED_KEY, String(timestamp));
 }
 
-async function getCloudUpdatedAt(uid: string): Promise<number | null> {
-    const snap = await getDoc(metaDoc(uid));
-    if (!snap.exists()) return null;
-    const updatedAt = snap.data().updatedAt as Timestamp | undefined;
-    return updatedAt ? updatedAt.toMillis() : null;
-}
-
 async function pushBackup(uid: string): Promise<void> {
     const json = await exportData();
     const data: BackupData = JSON.parse(json);
@@ -53,59 +46,42 @@ async function pushBackup(uid: string): Promise<void> {
     setLastSyncedAt(Date.now());
 }
 
-async function pullBackup(uid: string): Promise<void> {
+/**
+ * Additive pull: bring in only the cloud records this device doesn't already have,
+ * and NEVER overwrite a record that's here. This is the core safety property —
+ * nothing you've entered locally can be reverted, zeroed, or deleted by a sync.
+ */
+async function pullAdditive(uid: string): Promise<void> {
     const metaSnap = await getDoc(metaDoc(uid));
     if (!metaSnap.exists()) return;
 
-    const reconstructed: any = { version: metaSnap.data().version ?? 2 };
+    // Read all cloud tables up front; don't hold a Dexie transaction open across network I/O.
+    const cloudByTable: Record<string, any[]> = {};
     for (const table of TABLES) {
         const snap = await getDoc(tableDoc(uid, table));
-        reconstructed[table] = snap.exists() ? snap.data().data : [];
+        cloudByTable[table] = snap.exists() ? (snap.data().data ?? []) : [];
     }
 
-    await importData(JSON.stringify(reconstructed));
-
-    const cloudUpdatedAt = await getCloudUpdatedAt(uid);
-    setLastSyncedAt(cloudUpdatedAt ?? Date.now());
+    await db.transaction('rw', [db.exercises, db.templates, db.workoutSessions, db.workoutExerciseEntries, db.setEntries, db.prs], async () => {
+        for (const table of TABLES) {
+            const rows = cloudByTable[table];
+            if (!rows?.length) continue;
+            const t: any = (db as any)[table];
+            const localIds = new Set(await t.toCollection().primaryKeys());
+            const missing = rows.filter(r => r && r.id != null && !localIds.has(r.id));
+            if (missing.length) await t.bulkAdd(missing);
+        }
+    });
 }
 
 /**
- * Reconciles this device with the cloud backup. Last-write-wins at the whole-database
- * level. If the cloud has changes this device hasn't seen (pushed from another device),
- * pulling would silently discard whatever's local — so we only ask when the user asked
- * to sync (`interactive`). Automatic/background syncs never prompt: they push when
- * there's no conflict and otherwise defer to a manual "Sync now", which avoids nagging
- * every cycle and stops two signed-in devices from ping-ponging prompts at each other.
+ * Reconciles this device with the cloud backup without ever losing local data: first
+ * pull anything the cloud has that we don't (additively — never overwriting what's
+ * here), then upload the merged local state (now a superset of the cloud). Because
+ * neither step can reduce local data, this is safe to run automatically and needs no
+ * conflict prompt.
  */
-export async function syncNow(user: User, interactive = false): Promise<void> {
-    const cloudUpdatedAt = await getCloudUpdatedAt(user.uid);
-    const lastSyncedAt = getLastSyncedAt();
-
-    if (cloudUpdatedAt === null) {
-        // Nothing in the cloud yet for this account — bootstrap it from this device.
-        await pushBackup(user.uid);
-        return;
-    }
-
-    if (lastSyncedAt !== null && cloudUpdatedAt <= lastSyncedAt) {
-        // Cloud is not newer than what we've already synced — safe to push local changes.
-        await pushBackup(user.uid);
-        return;
-    }
-
-    // Cloud has changes this device hasn't seen. Never resolve this silently in the
-    // background — wait for an explicit "Sync now" so we don't overwrite either side.
-    if (!interactive) return;
-
-    const useCloud = await confirmDialog({
-        title: 'Sincronizar',
-        message: 'Hay datos más nuevos en la nube (de otro dispositivo). ¿Usar esos datos? Si cancelás, se suben los de este dispositivo y se sobrescribe la nube.',
-        confirmText: 'Usar la nube',
-        cancelText: 'Subir estos',
-    });
-    if (useCloud) {
-        await pullBackup(user.uid);
-    } else {
-        await pushBackup(user.uid);
-    }
+export async function syncNow(user: User): Promise<void> {
+    await pullAdditive(user.uid);
+    await pushBackup(user.uid);
 }
